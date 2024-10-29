@@ -2,6 +2,7 @@ package br.com.fiap.dao;
 
 import br.com.fiap.to.ClienteTO;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,6 +55,25 @@ public class ClienteDAO extends Repository {
             closeConnection();
         }
         return cliente;
+    }
+    public ClienteTO save(ClienteTO cliente) {
+        String sql = "INSERT INTO CLIENTE (NM_CLIENTE, NR_CPF, NR_RG, DT_NASCIMENTO) values( null, ?, ?, ?) ";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, cliente.getNm_cliente());
+            ps.setString(2, cliente.getNr_cpf());
+            ps.setString(3, cliente.getNr_rg());
+            ps.setDate(4, Date.valueOf(cliente.getDt_nascimento()));
+            if (ps.executeUpdate() > 0) {
+                return cliente;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return null;
     }
 }
 

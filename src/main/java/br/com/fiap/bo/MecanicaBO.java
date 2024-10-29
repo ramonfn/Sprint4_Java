@@ -1,7 +1,9 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.MecanicaDAO;
+import br.com.fiap.dao.ServicoDAO;
 import br.com.fiap.to.MecanicaTO;
+import br.com.fiap.to.ServicoTO;
 
 import java.util.ArrayList;
 
@@ -68,5 +70,17 @@ public class MecanicaBO {
         }
 
         return true;
+    }
+    public MecanicaTO save(MecanicaTO mecanico){
+        mecanicaDAO = new MecanicaDAO();
+        validateMecanico(mecanico);
+        if (mecanicaDAO.findByNm_mecanico(mecanico.getNm_mecanico()) != null) {
+            throw new IllegalArgumentException("Mecânico já existe com o nome informado.");
+        }
+        MecanicaTO savedMecanico = mecanicaDAO.save(mecanico);
+        if (savedMecanico == null) {
+            throw new IllegalArgumentException("Erro ao salvar o mecânico. Tente novamente.");
+        }
+        return savedMecanico;
     }
 }

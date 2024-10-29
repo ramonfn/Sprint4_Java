@@ -63,4 +63,21 @@ public class ConsultaDAO extends Repository {
         }
         return consulta;
     }
+    public ConsultaTO save(ConsultaTO consulta) {
+        String sql = "INSERT INTO CONSULTA (MOTIVO, DATA, HORA, LOCAL) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, consulta.getMotivo());
+            ps.setDate(2, Date.valueOf(consulta.getData()));
+            ps.setTime(3, Time.valueOf(consulta.getHora()));
+            ps.setString(4, consulta.getLocal());
+            if (ps.executeUpdate() > 0) {
+                return consulta;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar consulta: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return null;
+    }
 }

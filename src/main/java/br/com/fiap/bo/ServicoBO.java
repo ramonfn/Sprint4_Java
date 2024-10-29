@@ -1,7 +1,10 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ServicoDAO;
+import br.com.fiap.dao.VeiculoDAO;
 import br.com.fiap.to.ServicoTO;
+import br.com.fiap.to.VeiculoTO;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -49,6 +52,18 @@ public class ServicoBO {
             throw new IllegalArgumentException("Serviço não encontrado com o ID informado.");
         }
         return servico;
+    }
+    public ServicoTO save(ServicoTO servico){
+        servicoDAO = new ServicoDAO();
+        validateServico(servico);
+        if (servicoDAO.findById_servico(servico.getId_servico()) != null) {
+            throw new IllegalArgumentException("Já existe um serviço cadastrado com este ID.");
+        }
+        ServicoTO savedServico = servicoDAO.save(servico);
+        if (savedServico == null) {
+            throw new IllegalArgumentException("Erro ao salvar o serviço. Tente novamente.");
+        }
+        return savedServico;
     }
 }
 

@@ -46,4 +46,16 @@ public class VeiculoBO {
         }
         return veiculo;
     }
+    public VeiculoTO save(VeiculoTO veiculo){
+        veiculoDAO = new VeiculoDAO();
+        validateVeiculo(veiculo);
+        if (veiculoDAO.findById_veiculo(veiculo.getId_veiculo()) != null) {
+            throw new IllegalArgumentException("Já existe um veículo cadastrado com este ID.");
+        }
+        VeiculoTO savedVeiculo = veiculoDAO.save(veiculo);
+        if (savedVeiculo == null) {
+            throw new IllegalArgumentException("Erro ao salvar o veículo. Tente novamente.");
+        }
+        return savedVeiculo;
+    }
 }

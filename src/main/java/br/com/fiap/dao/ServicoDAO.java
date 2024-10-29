@@ -55,4 +55,21 @@ public class ServicoDAO extends Repository {
         }
         return servico;
     }
+    public ServicoTO save(ServicoTO servico) {
+        String sql = "INSERT INTO SERVICO (ID_SERVICO, DC_SERVICO, PR_SERVICO, DT_SERVICO) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, servico.getId_servico());
+            ps.setString(2, servico.getDc_servico());
+            ps.setInt(3, servico.getPr_servico());
+            ps.setDate(4, java.sql.Date.valueOf(servico.getDt_servico()));
+            if (ps.executeUpdate() > 0) {
+                return servico;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar serviço: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return null;
+    }
 }

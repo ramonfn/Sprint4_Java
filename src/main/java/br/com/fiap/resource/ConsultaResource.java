@@ -1,11 +1,9 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.ConsultaBO;
+import br.com.fiap.to.ClienteTO;
 import br.com.fiap.to.ConsultaTO;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -50,4 +48,18 @@ public class ConsultaResource {
             return Response.status(400).entity("Formato de data ou hora inválido.").build();
         }
     }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response save(ConsultaTO consulta) {
+        ConsultaTO resultado = consultaBO.save(consulta);
+        Response.ResponseBuilder response = null;
+        if (resultado != null){
+            response = Response.created(null);
+        } else {
+            response = Response.status(400);
+        }
+        response.entity(resultado);
+        return response.build();
+    }
 }
+

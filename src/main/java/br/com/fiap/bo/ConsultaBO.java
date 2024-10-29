@@ -1,7 +1,9 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ConsultaDAO;
+import br.com.fiap.dao.MecanicaDAO;
 import br.com.fiap.to.ConsultaTO;
+import br.com.fiap.to.MecanicaTO;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -76,5 +78,17 @@ public class ConsultaBO {
             throw new IllegalArgumentException("Consulta não encontrada para a data e hora informadas.");
         }
         return consulta;
+    }
+    public ConsultaTO save(ConsultaTO consulta){
+        consultaDAO = new ConsultaDAO();
+        validateConsulta(consulta);
+        if (consultaDAO.findByDataHora(consulta.getData(), consulta.getHora()) != null) {
+            throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
+        }
+        ConsultaTO savedConsulta = consultaDAO.save(consulta);
+        if (savedConsulta == null) {
+            throw new IllegalArgumentException("Erro ao salvar a consulta. Tente novamente.");
+        }
+        return savedConsulta;
     }
 }

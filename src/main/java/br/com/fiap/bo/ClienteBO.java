@@ -1,7 +1,9 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ClienteDAO;
+import br.com.fiap.dao.ConsultaDAO;
 import br.com.fiap.to.ClienteTO;
+import br.com.fiap.to.ConsultaTO;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,18 @@ public class ClienteBO {
             throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
         }
         return  clienteDAO.findByNr_cpf(nr_cpf);
+    }
+    public ClienteTO save(ClienteTO cliente){
+        clienteDAO = new ClienteDAO();
+        validateCliente(cliente);
+        if (clienteDAO.findByNr_cpf(cliente.getNr_cpf()) != null) {
+            throw new IllegalArgumentException("Já existe um cliente cadastrado com este CPF.");
+        }
+        ClienteTO savedCliente = clienteDAO.save(cliente);
+        if (savedCliente == null) {
+            throw new IllegalArgumentException("Erro ao salvar o cliente. Tente novamente.");
+        }
+        return savedCliente;
     }
 }
 

@@ -54,4 +54,21 @@ public class VeiculoDAO extends Repository {
         }
         return veiculo;
     }
+    public VeiculoTO save(VeiculoTO veiculo) {
+        String sql = "INSERT INTO VEICULO (ID_VEICULO, MARCA, MODELO, ANO_FABRICACAO) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, veiculo.getId_veiculo());
+            ps.setString(2, veiculo.getMarca());
+            ps.setString(3, veiculo.getModelo());
+            ps.setString(4, veiculo.getAno_fabricacao());
+            if (ps.executeUpdate() > 0) {
+                return veiculo;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar veículo: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return null;
+    }
 }

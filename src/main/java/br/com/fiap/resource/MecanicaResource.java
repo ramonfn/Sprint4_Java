@@ -1,11 +1,9 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.MecanicaBO;
+import br.com.fiap.to.ConsultaTO;
 import br.com.fiap.to.MecanicaTO;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -38,6 +36,19 @@ public class MecanicaResource {
             response = Response.ok();
         } else {
             response = Response.status(404);
+        }
+        response.entity(resultado);
+        return response.build();
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response save(MecanicaTO mecanica) {
+        MecanicaTO resultado = mecanicaBO.save(mecanica);
+        Response.ResponseBuilder response = null;
+        if (resultado != null){
+            response = Response.created(null);
+        } else {
+            response = Response.status(400);
         }
         response.entity(resultado);
         return response.build();

@@ -54,4 +54,21 @@ public class MecanicaDAO extends Repository {
         }
         return mecanica;
     }
+    public MecanicaTO save(MecanicaTO mecanica) {
+        String sql = "INSERT INTO MECANICA (NM_MECANICO, NR_LOGRADOURO, NM_LOGRADOURO, NR_CEP) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, mecanica.getNm_mecanico());
+            ps.setInt(2, mecanica.getNr_logradouro());
+            ps.setString(3, mecanica.getNm_logradouro());
+            ps.setInt(4, mecanica.getNr_cep());
+            if (ps.executeUpdate() > 0) {
+                return mecanica;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar mecânica: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return null;
+    }
 }
