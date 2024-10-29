@@ -5,7 +5,6 @@ import br.com.fiap.to.ConsultaTO;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ConsultaBO {
     private ConsultaDAO consultaDAO;
@@ -21,6 +20,7 @@ public class ConsultaBO {
         if (consultaDAO.findByDataHora(consulta.getData(), consulta.getHora()) != null) {
             throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
         }
+        // Aqui você deve adicionar a lógica para salvar a consulta no banco de dados, se necessário.
     }
 
     private void validateConsulta(ConsultaTO consulta) throws IllegalArgumentException {
@@ -30,7 +30,7 @@ public class ConsultaBO {
         if (consulta.getData() == null) {
             throw new IllegalArgumentException("Data da consulta não pode ser nula.");
         }
-        if (consulta.getHora() == null ) {
+        if (consulta.getHora() == null || consulta.getHora().trim().isEmpty()) {
             throw new IllegalArgumentException("Hora da consulta deve ser um número positivo.");
         }
         if (consulta.getLocal() == null || consulta.getLocal().trim().isEmpty()) {
@@ -39,23 +39,42 @@ public class ConsultaBO {
         if (consulta.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Data da consulta não pode ser no passado.");
         }
-        if (consulta.getData().isEqual(LocalDate.now()) && consulta.getHora().isBefore(LocalTime.now())) {
-            throw new IllegalArgumentException("Hora da consulta não pode ser no passado.");
-        }
     }
-    public ConsultaTO findByDataHora(LocalDate data, LocalTime hora) throws IllegalArgumentException {
+
+    public ConsultaTO findByDataHora(LocalDate data, String hora) throws IllegalArgumentException {
         consultaDAO = new ConsultaDAO();
+
+        // Verificando se a data é nula
         if (data == null) {
             throw new IllegalArgumentException("Data não pode ser nula.");
         }
-        if (hora == null) {
-            throw new IllegalArgumentException("Hora não pode ser nula.");
+
+        // Verificando se a hora é nula ou vazia
+        if (hora == null || hora.trim().isEmpty()) {
+            throw new IllegalArgumentException("Hora não pode ser nula ou vazia.");
         }
+
+        int horaInt;
+        try {
+            // Removendo qualquer caractere que não seja dígito
+            hora = hora.replaceAll("[^0-9]", "");
+
+            // Verificando o comprimento da string para garantir que esteja no formato correto
+            if (hora.length() != 6) {
+                throw new IllegalArgumentException("Hora deve estar no formato HHMMSS.");
+            }
+
+            // Convertendo a string para um inteiro
+            horaInt = Integer.parseInt(hora);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Hora deve ser um número válido.", e);
+        }
+
+        // Chamando o DAO para encontrar a consulta
         ConsultaTO consulta = consultaDAO.findByDataHora(data, hora);
         if (consulta == null) {
             throw new IllegalArgumentException("Consulta não encontrada para a data e hora informadas.");
         }
         return consulta;
     }
-
 }

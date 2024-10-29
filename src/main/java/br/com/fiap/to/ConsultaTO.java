@@ -6,7 +6,7 @@ import java.time.LocalTime;
 public class ConsultaTO {
     private String motivo;
     private LocalDate data;
-    private LocalTime hora;
+    private String hora;
     private String local;
 
     // Construtor vazio
@@ -14,7 +14,7 @@ public class ConsultaTO {
     }
 
     // Construtor com parâmetros
-    public ConsultaTO(String motivo, LocalDate data, LocalTime hora, String local) {
+    public ConsultaTO(String motivo, LocalDate data, String hora, String local) {
         this.motivo = motivo;
         this.data = data;
         this.hora = hora;
@@ -38,11 +38,11 @@ public class ConsultaTO {
         this.data = data;
     }
 
-    public LocalTime getHora() {
+    public String getHora() {
         return hora;
     }
 
-    public void setHora(LocalTime hora) {
+    public void setHora(String hora) {
         this.hora = hora;
     }
 
