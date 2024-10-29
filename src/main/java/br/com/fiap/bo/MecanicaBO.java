@@ -16,6 +16,9 @@ public class MecanicaBO {
     public void addMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
         validateMecanico(mecanico);
         mecanicaDAO = new MecanicaDAO();
+        if (mecanicaDAO.findByNm_mecanico(mecanico.getNm_mecanico()) != null) {
+            throw new IllegalArgumentException("Mecânico já existe com o nome informado.");
+        }
     }
 
     private void validateMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
@@ -31,5 +34,39 @@ public class MecanicaBO {
         if (String.valueOf(mecanico.getNr_cep()).length() != 8) {
             throw new IllegalArgumentException("CEP inválido. Deve conter exatamente 8 dígitos.");
         }
+        if (!isValidCep(mecanico.getNr_cep())) {
+            throw new IllegalArgumentException("CEP inválido. Verifique se está no formato correto.");
+        }
+    }
+
+    public MecanicaTO findByNm_mecanico(String nm_mecanico) {
+        mecanicaDAO = new MecanicaDAO();
+        //regra de negocios
+        if (nm_mecanico == null || nm_mecanico.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome do mecânico não pode ser vazio.");
+        }
+        MecanicaTO mecanico = mecanicaDAO.findByNm_mecanico(nm_mecanico);
+        if (mecanico == null) {
+            throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");
+        }
+        return mecanicaDAO.findByNm_mecanico(nm_mecanico);
+    }
+
+    private boolean isValidCep(int cep) {
+        String cepStr = String.valueOf(cep);
+
+        if (cepStr.length() != 8) {
+            return false;
+        }
+
+        if (!cepStr.matches("\\d{8}")) {
+            return false;
+        }
+
+        if (cepStr.startsWith("0")) {
+            return false;
+        }
+
+        return true;
     }
 }

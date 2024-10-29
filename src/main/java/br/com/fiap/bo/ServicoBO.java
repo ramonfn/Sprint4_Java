@@ -2,7 +2,7 @@ package br.com.fiap.bo;
 
 import br.com.fiap.dao.ServicoDAO;
 import br.com.fiap.to.ServicoTO;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ServicoBO {
@@ -16,6 +16,9 @@ public class ServicoBO {
     public void addServico(ServicoTO servico) throws IllegalArgumentException {
         validateServico(servico);
         servicoDAO = new ServicoDAO();
+        if (servicoDAO.findById_servico(servico.getId_servico()) != null) {
+            throw new IllegalArgumentException("Já existe um serviço cadastrado com este ID.");
+        }
     }
 
     private void validateServico(ServicoTO servico) throws IllegalArgumentException {
@@ -31,6 +34,21 @@ public class ServicoBO {
         if (servico.getDt_servico() == null) {
             throw new IllegalArgumentException("Data do serviço não pode ser nula.");
         }
+        if (servico.getDt_servico().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Data do serviço não pode ser no passado.");
+        }
+    }
+    public ServicoTO findById_servico(String id_servico) {
+        servicoDAO = new ServicoDAO();
+        if (id_servico == null || id_servico.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID do serviço não pode ser vazio.");
+        }
+
+        ServicoTO servico = servicoDAO.findById_servico(id_servico);
+        if (servico == null) {
+            throw new IllegalArgumentException("Serviço não encontrado com o ID informado.");
+        }
+        return servico;
     }
 }
 

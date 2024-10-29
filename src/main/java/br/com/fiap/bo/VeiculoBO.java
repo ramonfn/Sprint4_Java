@@ -16,6 +16,9 @@ public class VeiculoBO {
     public void addVeiculo(VeiculoTO veiculo) throws IllegalArgumentException {
         validateVeiculo(veiculo);
         veiculoDAO = new VeiculoDAO();
+        if (veiculoDAO.findById_veiculo(veiculo.getId_veiculo()) != null) {
+            throw new IllegalArgumentException("Já existe um veículo cadastrado com este ID.");
+        }
     }
 
     private void validateVeiculo(VeiculoTO veiculo) throws IllegalArgumentException {
@@ -31,5 +34,16 @@ public class VeiculoBO {
         if (veiculo.getAno_fabricacao() == null || String.valueOf(veiculo.getAno_fabricacao()).length() != 4) {
             throw new IllegalArgumentException("Ano de fabricação inválido. Deve conter exatamente 4 dígitos.");
         }
+    }
+    public VeiculoTO findById_veiculo(String id_veiculo){
+        veiculoDAO = new VeiculoDAO();
+        if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID do veículo não pode ser vazio.");
+        }
+        VeiculoTO veiculo = veiculoDAO.findById_veiculo(id_veiculo);
+        if (veiculo == null) {
+            throw new IllegalArgumentException("Veículo não encontrado com o ID informado.");
+        }
+        return veiculo;
     }
 }

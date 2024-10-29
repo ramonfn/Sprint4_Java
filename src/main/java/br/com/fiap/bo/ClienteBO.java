@@ -16,6 +16,9 @@ public class ClienteBO {
     public void addCliente(ClienteTO cliente) throws IllegalArgumentException {
         validateCliente(cliente);
         clienteDAO = new ClienteDAO();
+        if (clienteDAO.findByNr_cpf(cliente.getNr_cpf()) != null) {
+            throw new IllegalArgumentException("Cliente já existe com o CPF informado.");
+        }
     }
 
     private void validateCliente(ClienteTO cliente) throws IllegalArgumentException {
@@ -31,6 +34,17 @@ public class ClienteBO {
         if (cliente.getDt_nascimento() == null) {
             throw new IllegalArgumentException("Data de nascimento não pode ser nula.");
         }
+    }
+    public ClienteTO findbyNr_cpf(String nr_cpf) {
+        clienteDAO = new ClienteDAO();
+        if (nr_cpf == null || nr_cpf.trim().isEmpty()) {
+            throw new IllegalArgumentException("Número de CPF não pode ser vazio.");
+        }
+        ClienteTO cliente = clienteDAO.findByNr_cpf(nr_cpf);
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
+        }
+        return  clienteDAO.findByNr_cpf(nr_cpf);
     }
 }
 
