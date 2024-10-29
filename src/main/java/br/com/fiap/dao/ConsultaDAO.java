@@ -22,10 +22,10 @@ public class ConsultaDAO extends Repository {
             if (rs != null) {
                 while (rs.next()) {
                     ConsultaTO consulta = new ConsultaTO();
-                    consulta.setMotivo(rs.getString("Motivo"));
-                    consulta.setData(rs.getDate("Data").toLocalDate());
-                    consulta.setHora(rs.getTime("Hora").toLocalTime());
-                    consulta.setLocal(rs.getString("Local"));
+                    consulta.setMotivo(rs.getString(1));
+                    consulta.setData(rs.getDate(2).toLocalDate());
+                    consulta.setHora(rs.getTime(3).toLocalTime());
+                    consulta.setLocal(rs.getString(4));
                     consultas.add(consulta);
                 }
             } else {
@@ -47,10 +47,10 @@ public class ConsultaDAO extends Repository {
             ps.setTime(2, Time.valueOf(hora));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                consulta.setMotivo(rs.getString("Motivo"));
-                consulta.setData(rs.getDate("Data").toLocalDate());
-                consulta.setHora(rs.getTime("Hora").toLocalTime());
-                consulta.setLocal(rs.getString("Local"));
+                consulta.setMotivo(rs.getString(1));
+                consulta.setData(rs.getDate(2).toLocalDate());
+                consulta.setHora(rs.getTime(3).toLocalTime());
+                consulta.setLocal(rs.getString(4));
             }else{
                 return null;
             }

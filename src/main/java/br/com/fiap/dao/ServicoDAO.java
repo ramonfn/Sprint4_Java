@@ -17,10 +17,10 @@ public class ServicoDAO extends Repository {
             if (rs != null) {
                 while (rs.next()) {
                     ServicoTO servico = new ServicoTO();
-                    servico.setId_servico(rs.getString("Id_servico"));
-                    servico.setDc_servico(rs.getString("Descrição_servico"));
-                    servico.setPr_servico(rs.getInt("Preço_servico"));
-                    servico.setDt_servico(rs.getDate("Data_servico").toLocalDate());
+                    servico.setId_servico(rs.getString(1));
+                    servico.setDc_servico(rs.getString(2));
+                    servico.setPr_servico(rs.getInt(3));
+                    servico.setDt_servico(rs.getDate(4).toLocalDate());
                     servicos.add(servico);
                 }
             } else {
@@ -41,10 +41,10 @@ public class ServicoDAO extends Repository {
             ps.setString(1, id_servico);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                servico.setId_servico(rs.getString("Id_servico"));
-                servico.setDc_servico(rs.getString("Descrição_servico"));
-                servico.setPr_servico(rs.getInt("Preço_servico"));
-                servico.setDt_servico(rs.getDate("Data_servico").toLocalDate());
+                servico.setId_servico(rs.getString(1));
+                servico.setDc_servico(rs.getString(2));
+                servico.setPr_servico(rs.getInt(3));
+                servico.setDt_servico(rs.getDate(4).toLocalDate());
             }else{
                 return null;
             }

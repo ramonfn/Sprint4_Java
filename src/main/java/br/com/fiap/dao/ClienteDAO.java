@@ -17,17 +17,17 @@ public class ClienteDAO extends Repository {
             if (rs != null) {
                 while (rs.next()) {
                     ClienteTO cliente = new ClienteTO();
-                    cliente.setNm_cliente(rs.getString("Nome"));
-                    cliente.setNr_cpf(rs.getString("CPF"));
-                    cliente.setNr_rg(rs.getString("RG"));
-                    cliente.setDt_nascimento(rs.getDate("Data_de_nascimento").toLocalDate());
+                    cliente.setNm_cliente(rs.getString(1));
+                    cliente.setNr_cpf(rs.getString(2));
+                    cliente.setNr_rg(rs.getString(3));
+                    cliente.setDt_nascimento(rs.getDate(4).toLocalDate());
                     clientes.add(cliente);
                 }
             } else {
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("Erro na consulta: " + e.getMessage());
+            System.out.println("Erro na consulta (ClienteDAO): " + e.getMessage());
         } finally {
             closeConnection();
         }
@@ -41,15 +41,15 @@ public class ClienteDAO extends Repository {
             ps.setString(1, nr_cpf);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                cliente.setNm_cliente(rs.getString("Nome"));
-                cliente.setNr_cpf(rs.getString("CPF"));
-                cliente.setNr_rg(rs.getString("RG"));
-                cliente.setDt_nascimento(rs.getDate("Data_de_nascimento").toLocalDate());
+                cliente.setNm_cliente(rs.getString(1));
+                cliente.setNr_cpf(rs.getString(2));
+                cliente.setNr_rg(rs.getString(3));
+                cliente.setDt_nascimento(rs.getDate(4).toLocalDate());
             }else{
                 return null;
             }
     }catch (SQLException e) {
-            System.out.println("Erro na consulta: " + e.getMessage());
+            System.out.println("Erro na consulta (ClienteDAO): " + e.getMessage());
         }finally {
             closeConnection();
         }

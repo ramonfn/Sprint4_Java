@@ -27,4 +27,5 @@ public class ServicoResource {
         response.entity(resultado);
         return response.build();
     }
+
 }

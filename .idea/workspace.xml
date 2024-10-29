@@ -6,11 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="6528a40e-e040-4cc0-b0ec-8a14c156c9fd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ClienteBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ClienteBO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ConsultaBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ConsultaBO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/MecanicaBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/MecanicaBO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ServicoBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/ServicoBO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/VeiculoBO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/bo/VeiculoBO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ClienteDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ClienteDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ConsultaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ConsultaDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/MecanicaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/MecanicaDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ServicoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/ServicoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/VeiculoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/dao/VeiculoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ClienteResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ClienteResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ConsultaResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ConsultaResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/MecanicaResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/MecanicaResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ServicoResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/ServicoResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/VeiculoResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/fiap/resource/VeiculoResource.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,6 +1,5 @@
 package br.com.fiap.dao;
 
-import br.com.fiap.to.ServicoTO;
 import br.com.fiap.to.VeiculoTO;
 
 import java.sql.PreparedStatement;
@@ -17,10 +16,10 @@ public class VeiculoDAO extends Repository {
             if (rs != null) {
                 while (rs.next()) {
                     VeiculoTO veiculo = new VeiculoTO();
-                    veiculo.setId_veiculo(rs.getString("Id_veiculo"));
-                    veiculo.setMarca(rs.getString("Marca"));
-                    veiculo.setModelo(rs.getString("Modelo"));
-                    veiculo.setAno_fabricacao(rs.getDate("Ano_de_fabricacao").toLocalDate());
+                    veiculo.setId_veiculo(rs.getString(1));
+                    veiculo.setMarca(rs.getString(2));
+                    veiculo.setModelo(rs.getString(3));
+                    veiculo.setAno_fabricacao(rs.getDate(4).toLocalDate());
                     veiculos.add(veiculo);
                 }
             } else {
@@ -41,10 +40,10 @@ public class VeiculoDAO extends Repository {
             ps.setString(1, id_veiculo);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                veiculo.setId_veiculo(rs.getString("Id_veiculo"));
-                veiculo.setMarca(rs.getString("Marca"));
-                veiculo.setModelo(rs.getString("Modelo"));
-                veiculo.setAno_fabricacao(rs.getDate("Ano_de_fabricacao").toLocalDate());
+                veiculo.setId_veiculo(rs.getString(1));
+                veiculo.setMarca(rs.getString(2));
+                veiculo.setModelo(rs.getString(3));
+                veiculo.setAno_fabricacao(rs.getDate(4).toLocalDate());
             }else{
                 return null;
             }

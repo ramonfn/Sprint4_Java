@@ -16,10 +16,10 @@ public class MecanicaDAO extends Repository {
             if (rs != null) {
                 while (rs.next()) {
                     MecanicaTO mecanica = new MecanicaTO();
-                    mecanica.setNm_mecanico(rs.getString("Nome"));
-                    mecanica.setNr_logradouro(rs.getInt("Numero_logradouro"));
-                    mecanica.setNm_logradouro(rs.getString("Nome_logradouro"));
-                    mecanica.setNr_cep(rs.getInt("Numero_cep"));
+                    mecanica.setNm_mecanico(rs.getString(1));
+                    mecanica.setNr_logradouro(rs.getInt(2));
+                    mecanica.setNm_logradouro(rs.getString(3));
+                    mecanica.setNr_cep(rs.getInt(4));
                     mecanicas.add(mecanica);
                 }
             } else {
@@ -40,10 +40,10 @@ public class MecanicaDAO extends Repository {
             ps.setString(1, nm_mecanico);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                mecanica.setNm_mecanico(rs.getString("Nome"));
-                mecanica.setNr_logradouro(rs.getInt("Numero_logradouro"));
-                mecanica.setNm_logradouro(rs.getString("Nome_logradouro"));
-                mecanica.setNr_cep(rs.getInt("Numero_cep"));
+                mecanica.setNm_mecanico(rs.getString(1));
+                mecanica.setNr_logradouro(rs.getInt(2));
+                mecanica.setNm_logradouro(rs.getString(3));
+                mecanica.setNr_cep(rs.getInt(4));
             } else {
                 return null;
             }
