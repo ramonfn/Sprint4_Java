@@ -19,7 +19,7 @@ public class VeiculoDAO extends Repository {
                     veiculo.setId_veiculo(rs.getString(1));
                     veiculo.setMarca(rs.getString(2));
                     veiculo.setModelo(rs.getString(3));
-                    veiculo.setAno_fabricacao(rs.getDate(4).toLocalDate());
+                    veiculo.setAno_fabricacao(rs.getString(4));
                     veiculos.add(veiculo);
                 }
             } else {
@@ -43,7 +43,7 @@ public class VeiculoDAO extends Repository {
                 veiculo.setId_veiculo(rs.getString(1));
                 veiculo.setMarca(rs.getString(2));
                 veiculo.setModelo(rs.getString(3));
-                veiculo.setAno_fabricacao(rs.getDate(4).toLocalDate());
+                veiculo.setAno_fabricacao(rs.getString(4));
             }else{
                 return null;
             }

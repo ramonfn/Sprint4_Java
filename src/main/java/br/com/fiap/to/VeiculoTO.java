@@ -6,14 +6,14 @@ public class VeiculoTO {
     private String id_veiculo;
     private String marca;
     private String modelo;
-    private LocalDate ano_fabricacao;
+    private String ano_fabricacao;
 
     // Construtor vazio
     public VeiculoTO() {
     }
 
     // Construtor com parâmetros
-    public VeiculoTO(String id_veiculo, String marca, String modelo, LocalDate ano_fabricacao) {
+    public VeiculoTO(String id_veiculo, String marca, String modelo, String ano_fabricacao) {
         this.id_veiculo = id_veiculo;
         this.marca = marca;
         this.modelo = modelo;
@@ -45,11 +45,11 @@ public class VeiculoTO {
         this.modelo = modelo;
     }
 
-    public LocalDate getAno_fabricacao() {
+    public String getAno_fabricacao() {
         return ano_fabricacao;
     }
 
-    public void setAno_fabricacao(LocalDate ano_fabricacao) {
+    public void setAno_fabricacao(String ano_fabricacao) {
         this.ano_fabricacao = ano_fabricacao;
     }
 }
