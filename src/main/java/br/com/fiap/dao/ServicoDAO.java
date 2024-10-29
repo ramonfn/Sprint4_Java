@@ -1,5 +1,6 @@
 package br.com.fiap.dao;
 
+import br.com.fiap.to.ClienteTO;
 import br.com.fiap.to.ServicoTO;
 
 import java.sql.PreparedStatement;
@@ -31,5 +32,27 @@ public class ServicoDAO extends Repository {
             closeConnection();
         }
         return servicos;
+    }
+    public ServicoTO findById_servico(String id_servico) {
+        ServicoTO servico = new ServicoTO();
+        String sql = "SELECT * FROM SERVICO WHERE ID_SERVICO = ?";;
+        try (PreparedStatement ps = getConnection().prepareStatement(sql))
+        {
+            ps.setString(1, id_servico);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                servico.setId_servico(rs.getString("Id_servico"));
+                servico.setDc_servico(rs.getString("Descrição_servico"));
+                servico.setPr_servico(rs.getInt("Preço_servico"));
+                servico.setDt_servico(rs.getDate("Data_servico").toLocalDate());
+            }else{
+                return null;
+            }
+        }catch (SQLException e) {
+            System.out.println("Erro na consulta: " + e.getMessage());
+        }finally {
+            closeConnection();
+        }
+        return servico;
     }
 }

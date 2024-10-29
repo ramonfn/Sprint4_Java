@@ -33,5 +33,27 @@ public class ClienteDAO extends Repository {
         }
         return clientes;
     }
+    public ClienteTO findByNr_cpf(String nr_cpf) {
+        ClienteTO cliente = new ClienteTO();
+        String sql = "SELECT * FROM CLIENTE WHERE NR_CPF = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql))
+        {
+            ps.setString(1, nr_cpf);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                cliente.setNm_cliente(rs.getString("Nome"));
+                cliente.setNr_cpf(rs.getString("CPF"));
+                cliente.setNr_rg(rs.getString("RG"));
+                cliente.setDt_nascimento(rs.getDate("Data_de_nascimento").toLocalDate());
+            }else{
+                return null;
+            }
+    }catch (SQLException e) {
+            System.out.println("Erro na consulta: " + e.getMessage());
+        }finally {
+            closeConnection();
+        }
+        return cliente;
+    }
 }
 

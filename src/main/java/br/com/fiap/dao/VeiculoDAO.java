@@ -1,5 +1,6 @@
 package br.com.fiap.dao;
 
+import br.com.fiap.to.ServicoTO;
 import br.com.fiap.to.VeiculoTO;
 
 import java.sql.PreparedStatement;
@@ -31,5 +32,27 @@ public class VeiculoDAO extends Repository {
             closeConnection();
         }
         return veiculos;
+    }
+    public VeiculoTO findById_veiculo(String id_veiculo) {
+        VeiculoTO veiculo = new VeiculoTO();
+        String sql = "SELECT * FROM VEICULO WHERE ID_VEICULO = ?";;
+        try (PreparedStatement ps = getConnection().prepareStatement(sql))
+        {
+            ps.setString(1, id_veiculo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                veiculo.setId_veiculo(rs.getString("Id_veiculo"));
+                veiculo.setMarca(rs.getString("Marca"));
+                veiculo.setModelo(rs.getString("Modelo"));
+                veiculo.setAno_fabricacao(rs.getDate("Ano_de_fabricacao").toLocalDate());
+            }else{
+                return null;
+            }
+        }catch (SQLException e) {
+            System.out.println("Erro na consulta: " + e.getMessage());
+        }finally {
+            closeConnection();
+        }
+        return veiculo;
     }
 }
