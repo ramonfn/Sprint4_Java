@@ -1,19 +1,25 @@
 package br.com.fiap.to;
 
 import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.NotBlank;
 
 public class ClienteTO {
-    private String nm_cliente;
-    private String nr_cpf;
-    private String nr_rg;
-    private LocalDate dt_nascimento;
+
+    @NotBlank private String nm_cliente;
+
+    @NotBlank private String nr_cpf;
+
+    @NotBlank private String nr_rg;
+
+    @NotNull @PastOrPresent private LocalDate dt_nascimento;
 
     // Construtor vazio
-    public ClienteTO() {
-    }
+    public ClienteTO() {}
 
     // Construtor com parâmetros
-    public ClienteTO(String nm_cliente, String nr_cpf, String nr_rg, LocalDate dt_nascimento) {
+    public ClienteTO(@NotBlank String nm_cliente, @NotBlank String nr_cpf, @NotBlank String nr_rg, @NotNull @PastOrPresent LocalDate dt_nascimento) {
         this.nm_cliente = nm_cliente;
         this.nr_cpf = nr_cpf;
         this.nr_rg = nr_rg;

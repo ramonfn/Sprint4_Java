@@ -5,6 +5,8 @@ import br.com.fiap.to.ClienteTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @Path("/Sprint4_java/cliente")
@@ -37,7 +39,7 @@ public class ClienteResource {
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(ClienteTO cliente) {
+    public Response save(@Valid ClienteTO cliente) {
         ClienteTO resultado = clienteBO.save(cliente);
         Response.ResponseBuilder response = null;
         if (resultado != null){

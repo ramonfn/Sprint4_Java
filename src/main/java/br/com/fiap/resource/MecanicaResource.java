@@ -1,8 +1,8 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.MecanicaBO;
-import br.com.fiap.to.ConsultaTO;
 import br.com.fiap.to.MecanicaTO;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -45,7 +45,7 @@ public class MecanicaResource {
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(MecanicaTO mecanica) {
+    public Response save(@Valid MecanicaTO mecanica) {
         MecanicaTO resultado = mecanicaBO.save(mecanica);
         Response.ResponseBuilder response = null;
         if (resultado != null){

@@ -2,13 +2,13 @@ package br.com.fiap.resource;
 
 import br.com.fiap.bo.ConsultaBO;
 import br.com.fiap.to.ConsultaTO;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.time.format.DateTimeFormatter;
 
 @Path("/Sprint4_java/consulta")
 public class ConsultaResource {
@@ -50,7 +50,7 @@ public class ConsultaResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(ConsultaTO consulta) {
+    public Response save(@Valid ConsultaTO consulta) {
         System.out.println("Consulta recebida: " + consulta); // Log para depuração
 
         if (consulta == null) {

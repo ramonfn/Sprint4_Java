@@ -69,7 +69,7 @@ public class ConsultaBO {
         if (hora.matches("\\d{2}:\\d{2}")) {
             return hora.replace(":", "") + "00"; // Remove ":" e adiciona segundos
         }
-        
+
         return hora; // Retorna a hora se já estiver no formato correto
     }
 

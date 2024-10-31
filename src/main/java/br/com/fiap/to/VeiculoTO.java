@@ -1,17 +1,23 @@
 package br.com.fiap.to;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class VeiculoTO {
-    private String id_veiculo;
-    private String marca;
-    private String modelo;
-    private String ano_fabricacao;
+
+    @NotBlank private String id_veiculo;
+
+    @NotBlank private String marca;
+
+    @NotBlank private String modelo;
+
+    @NotBlank private String ano_fabricacao;
 
     // Construtor vazio
-    public VeiculoTO() {
-    }
+    public VeiculoTO() {}
 
     // Construtor com parâmetros
-    public VeiculoTO(String id_veiculo, String marca, String modelo, String ano_fabricacao) {
+    public VeiculoTO(@NotBlank String id_veiculo, @NotBlank String marca, @NotBlank String modelo, @NotBlank String ano_fabricacao) {
         this.id_veiculo = id_veiculo;
         this.marca = marca;
         this.modelo = modelo;
