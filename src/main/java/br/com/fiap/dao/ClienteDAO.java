@@ -57,7 +57,7 @@ public class ClienteDAO extends Repository {
         return cliente;
     }
     public ClienteTO save(ClienteTO cliente) {
-        String sql = "INSERT INTO CLIENTE (NM_CLIENTE, NR_CPF, NR_RG, DT_NASCIMENTO) values( null, ?, ?, ?) ";
+        String sql = "INSERT INTO CLIENTE (NM_CLIENTE, NR_CPF, NR_RG, DT_NASCIMENTO) values( ?, ?, ?, ?) ";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, cliente.getNm_cliente());
             ps.setString(2, cliente.getNr_cpf());

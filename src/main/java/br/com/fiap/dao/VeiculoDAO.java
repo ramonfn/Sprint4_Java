@@ -33,27 +33,30 @@ public class VeiculoDAO extends Repository {
         return veiculos;
     }
     public VeiculoTO findById_veiculo(String id_veiculo) {
-        VeiculoTO veiculo = new VeiculoTO();
-        String sql = "SELECT * FROM VEICULO WHERE ID_VEICULO = ?";;
-        try (PreparedStatement ps = getConnection().prepareStatement(sql))
-        {
-            ps.setString(1, id_veiculo);
+        if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID do veículo não pode ser nulo ou vazio.");
+        }
+
+        VeiculoTO veiculo = null; // Inicializa como null
+        String sql = "SELECT * FROM VEICULO WHERE ID_VEICULO LIKE ?"; // Utiliza o padrão LIKE
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, id_veiculo.trim() + "%"); // Adiciona % para busca parcial
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                veiculo = new VeiculoTO();
                 veiculo.setId_veiculo(rs.getString(1));
                 veiculo.setMarca(rs.getString(2));
                 veiculo.setModelo(rs.getString(3));
                 veiculo.setAno_fabricacao(rs.getString(4));
-            }else{
-                return null;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Erro na consulta: " + e.getMessage());
-        }finally {
+        } finally {
             closeConnection();
         }
-        return veiculo;
+        return veiculo; // Retorna null se não encontrar
     }
+
     public VeiculoTO save(VeiculoTO veiculo) {
         String sql = "INSERT INTO VEICULO (ID_VEICULO, MARCA, MODELO, ANO_FABRICACAO) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {

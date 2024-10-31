@@ -1,10 +1,11 @@
 package br.com.fiap.to;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 
 public class ConsultaTO {
     private String motivo;
+    @JsonbDateFormat("yyyy/MM/dd")
     private LocalDate data;
     private String hora;
     private String local;

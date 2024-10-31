@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ServicoBO {
-    private ServicoDAO servicoDAO;
+    private ServicoDAO servicoDAO  = new ServicoDAO();
 
     public ArrayList<ServicoTO> findAll() {
         servicoDAO = new ServicoDAO();
@@ -42,14 +42,13 @@ public class ServicoBO {
         }
     }
     public ServicoTO findById_servico(String id_servico) {
-        servicoDAO = new ServicoDAO();
         if (id_servico == null || id_servico.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do serviço não pode ser vazio.");
         }
-
+        id_servico = id_servico.trim();
         ServicoTO servico = servicoDAO.findById_servico(id_servico);
         if (servico == null) {
-            throw new IllegalArgumentException("Serviço não encontrado com o ID informado.");
+            throw new IllegalArgumentException("Serviço com ID " + id_servico + " não encontrado.");
         }
         return servico;
     }

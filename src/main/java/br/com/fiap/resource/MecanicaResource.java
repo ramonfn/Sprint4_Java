@@ -30,15 +30,18 @@ public class MecanicaResource {
     @Path("/{nm_mecanico}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByNm_mecanico(@PathParam("nm_mecanico") String nm_mecanico){
-        MecanicaTO resultado = mecanicaBO.findByNm_mecanico(nm_mecanico);
-        Response.ResponseBuilder response = null;
-        if (resultado != null) {
-            response = Response.ok();
-        } else {
-            response = Response.status(404);
+        try {
+            MecanicaTO resultado = mecanicaBO.findByNm_mecanico(nm_mecanico);
+            return Response.ok(resultado).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build();
         }
-        response.entity(resultado);
-        return response.build();
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

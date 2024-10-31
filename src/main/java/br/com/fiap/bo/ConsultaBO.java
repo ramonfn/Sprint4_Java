@@ -1,12 +1,11 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ConsultaDAO;
-import br.com.fiap.dao.MecanicaDAO;
 import br.com.fiap.to.ConsultaTO;
-import br.com.fiap.to.MecanicaTO;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ConsultaBO {
     private ConsultaDAO consultaDAO;
@@ -22,7 +21,7 @@ public class ConsultaBO {
         if (consultaDAO.findByDataHora(consulta.getData(), consulta.getHora()) != null) {
             throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
         }
-        // Aqui você deve adicionar a lógica para salvar a consulta no banco de dados, se necessário.
+        consultaDAO.save(consulta);  // Salva a consulta no banco de dados
     }
 
     private void validateConsulta(ConsultaTO consulta) throws IllegalArgumentException {
@@ -33,7 +32,7 @@ public class ConsultaBO {
             throw new IllegalArgumentException("Data da consulta não pode ser nula.");
         }
         if (consulta.getHora() == null || consulta.getHora().trim().isEmpty()) {
-            throw new IllegalArgumentException("Hora da consulta deve ser um número positivo.");
+            throw new IllegalArgumentException("Hora da consulta não pode ser nula ou vazia.");
         }
         if (consulta.getLocal() == null || consulta.getLocal().trim().isEmpty()) {
             throw new IllegalArgumentException("Local da consulta não pode ser vazio.");
@@ -41,54 +40,58 @@ public class ConsultaBO {
         if (consulta.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Data da consulta não pode ser no passado.");
         }
+        // O formato da hora será validado na normalização
     }
 
     public ConsultaTO findByDataHora(LocalDate data, String hora) throws IllegalArgumentException {
         consultaDAO = new ConsultaDAO();
 
-        // Verificando se a data é nula
         if (data == null) {
             throw new IllegalArgumentException("Data não pode ser nula.");
         }
 
-        // Verificando se a hora é nula ou vazia
-        if (hora == null || hora.trim().isEmpty()) {
-            throw new IllegalArgumentException("Hora não pode ser nula ou vazia.");
-        }
-
-        int horaInt;
-        try {
-            // Removendo qualquer caractere que não seja dígito
-            hora = hora.replaceAll("[^0-9]", "");
-
-            // Verificando o comprimento da string para garantir que esteja no formato correto
-            if (hora.length() != 6) {
-                throw new IllegalArgumentException("Hora deve estar no formato HHMMSS.");
-            }
-
-            // Convertendo a string para um inteiro
-            horaInt = Integer.parseInt(hora);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Hora deve ser um número válido.", e);
-        }
+        String normalizedHour = normalizeHour(hora); // Normaliza a hora
 
         // Chamando o DAO para encontrar a consulta
-        ConsultaTO consulta = consultaDAO.findByDataHora(data, hora);
+        ConsultaTO consulta = consultaDAO.findByDataHora(data, normalizedHour);
         if (consulta == null) {
             throw new IllegalArgumentException("Consulta não encontrada para a data e hora informadas.");
         }
         return consulta;
     }
-    public ConsultaTO save(ConsultaTO consulta){
+
+    private String normalizeHour(String hora) {
+        if (hora == null || hora.trim().isEmpty()) {
+            throw new IllegalArgumentException("Hora não pode ser nula ou vazia.");
+        }
+        hora = hora.replaceAll("\\s+", "");
+
+        if (hora.matches("\\d{2}:\\d{2}")) {
+            return hora.replace(":", "") + "00"; // Remove ":" e adiciona segundos
+        }
+        
+        return hora; // Retorna a hora se já estiver no formato correto
+    }
+
+    public ConsultaTO save(ConsultaTO consulta) {
         consultaDAO = new ConsultaDAO();
         validateConsulta(consulta);
-        if (consultaDAO.findByDataHora(consulta.getData(), consulta.getHora()) != null) {
+
+        String normalizedHour = normalizeHour(consulta.getHora()); // Normaliza a hora antes de verificar
+
+        if (consultaDAO.findByDataHora(consulta.getData(), normalizedHour) != null) {
             throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
         }
+
         ConsultaTO savedConsulta = consultaDAO.save(consulta);
         if (savedConsulta == null) {
             throw new IllegalArgumentException("Erro ao salvar a consulta. Tente novamente.");
         }
         return savedConsulta;
+    }
+
+    public static LocalDate convertStringToLocalDate(String data) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return LocalDate.parse(data, formatter);
     }
 }

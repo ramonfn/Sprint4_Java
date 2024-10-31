@@ -26,6 +26,25 @@ public class ServicoResource {
         response.entity(resultado);
         return response.build();
     }
+    @GET
+    @Path("/{id_servico}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findByIdServico(@PathParam("id_servico") String idServico) {
+        try {
+            ServicoTO servico = servicoBO.findById_servico(idServico);
+            return Response.ok(servico).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build();
+        }
+
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response save(ServicoTO servico) {

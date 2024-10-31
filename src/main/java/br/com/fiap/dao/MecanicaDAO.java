@@ -34,26 +34,26 @@ public class MecanicaDAO extends Repository {
     }
 
     public MecanicaTO findByNm_mecanico(String nm_mecanico) {
-        MecanicaTO mecanica = new MecanicaTO();
-        String sql = "SELECT * FROM MECANICA WHERE NM_MECANICO = ?";
+        MecanicaTO mecanica = null; // Inicializa como null
+        String sql = "SELECT * FROM MECANICA WHERE NM_MECANICO LIKE ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, nm_mecanico);
+            ps.setString(1, nm_mecanico.trim() + "%"); // Utiliza o padrão LIKE
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                mecanica = new MecanicaTO();
                 mecanica.setNm_mecanico(rs.getString(1));
                 mecanica.setNr_logradouro(rs.getInt(2));
                 mecanica.setNm_logradouro(rs.getString(3));
                 mecanica.setNr_cep(rs.getInt(4));
-            } else {
-                return null;
             }
         } catch (SQLException e) {
             System.out.println("Erro na consulta: " + e.getMessage());
         } finally {
             closeConnection();
         }
-        return mecanica;
+        return mecanica; // Retorna null se não encontrar
     }
+
     public MecanicaTO save(MecanicaTO mecanica) {
         String sql = "INSERT INTO MECANICA (NM_MECANICO, NR_LOGRADOURO, NM_LOGRADOURO, NR_CEP) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {

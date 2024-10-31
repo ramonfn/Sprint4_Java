@@ -1,26 +1,30 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.MecanicaDAO;
-import br.com.fiap.dao.ServicoDAO;
 import br.com.fiap.to.MecanicaTO;
-import br.com.fiap.to.ServicoTO;
 
 import java.util.ArrayList;
 
 public class MecanicaBO {
     private MecanicaDAO mecanicaDAO;
 
+    // Construtor para inicializar o MecanicaDAO
+    public MecanicaBO() {
+        this.mecanicaDAO = new MecanicaDAO(); // Inicializa o DAO
+    }
+
     public ArrayList<MecanicaTO> findAll() {
-        mecanicaDAO = new MecanicaDAO();
         return mecanicaDAO.findAll();
     }
 
     public void addMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
         validateMecanico(mecanico);
-        mecanicaDAO = new MecanicaDAO();
-        if (mecanicaDAO.findByNm_mecanico(mecanico.getNm_mecanico()) != null) {
+        // Usando trim() para garantir que não haja espaços em branco
+        String nomeMecanico = mecanico.getNm_mecanico().trim();
+        if (mecanicaDAO.findByNm_mecanico(nomeMecanico) != null) {
             throw new IllegalArgumentException("Mecânico já existe com o nome informado.");
         }
+        // Aqui você pode adicionar a lógica para salvar o mecânico se necessário
     }
 
     private void validateMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
@@ -42,16 +46,15 @@ public class MecanicaBO {
     }
 
     public MecanicaTO findByNm_mecanico(String nm_mecanico) {
-        mecanicaDAO = new MecanicaDAO();
-        //regra de negocios
         if (nm_mecanico == null || nm_mecanico.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome do mecânico não pode ser vazio.");
         }
-        MecanicaTO mecanico = mecanicaDAO.findByNm_mecanico(nm_mecanico);
-        if (mecanico == null) {
+        System.out.println("Buscando mecânico: '" + nm_mecanico.trim() + "'");
+        MecanicaTO mecanica = mecanicaDAO.findByNm_mecanico(nm_mecanico.trim());
+        if (mecanica == null) {
             throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");
         }
-        return mecanicaDAO.findByNm_mecanico(nm_mecanico);
+        return mecanica;
     }
 
     private boolean isValidCep(int cep) {
@@ -71,10 +74,11 @@ public class MecanicaBO {
 
         return true;
     }
-    public MecanicaTO save(MecanicaTO mecanico){
-        mecanicaDAO = new MecanicaDAO();
+
+    public MecanicaTO save(MecanicaTO mecanico) {
         validateMecanico(mecanico);
-        if (mecanicaDAO.findByNm_mecanico(mecanico.getNm_mecanico()) != null) {
+        String nomeMecanico = mecanico.getNm_mecanico().trim(); // Trimming aqui também
+        if (mecanicaDAO.findByNm_mecanico(nomeMecanico) != null) {
             throw new IllegalArgumentException("Mecânico já existe com o nome informado.");
         }
         MecanicaTO savedMecanico = mecanicaDAO.save(mecanico);

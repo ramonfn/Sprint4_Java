@@ -15,15 +15,11 @@ public class ClienteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll(){
         ArrayList<ClienteTO> resultado = clienteBO.findAll();
-        Response.ResponseBuilder response = null;
-        if (resultado !=null) {
-            response = Response.ok();
+        if (resultado != null) {
+            return Response.ok(resultado).build();
         } else {
-            response = Response.status(404);
-
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        response.entity(resultado);
-        return response.build();
     }
     @GET
     @Path("/{nr_cpf}")

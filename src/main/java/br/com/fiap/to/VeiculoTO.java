@@ -1,7 +1,5 @@
 package br.com.fiap.to;
 
-import java.time.LocalDate;
-
 public class VeiculoTO {
     private String id_veiculo;
     private String marca;
