@@ -35,7 +35,7 @@ public class MecanicaDAO extends Repository {
 
     public MecanicaTO findByNm_mecanico(String nm_mecanico) {
         MecanicaTO mecanica = null; // Inicializa como null
-        String sql = "SELECT * FROM MECANICA WHERE NM_MECANICO LIKE ?";
+        String sql = "SELECT * FROM MECANICA WHERE TRIM(NM_MECANICO) LIKE ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, nm_mecanico.trim() + "%"); // Utiliza o padrão LIKE
             ResultSet rs = ps.executeQuery();
@@ -73,9 +73,9 @@ public class MecanicaDAO extends Repository {
     }
 
     public boolean delete(String nm_mecanico) {
-        String sql = "DELETE FROM MECANICA WHERE NM_MECANICO = ?";
+        String sql = "DELETE FROM MECANICA WHERE TRIM(NM_MECANICO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, nm_mecanico);
+            ps.setString(1, nm_mecanico.trim());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Erro ao excluir: " + e.getMessage());

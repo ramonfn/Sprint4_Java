@@ -92,7 +92,7 @@ public class MecanicaBO {
         if (nomeMecanico == null || nomeMecanico.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome do mecânico não pode ser vazio.");
         }
-
+        System.out.println("Tentando excluir o mecânico: " + nomeMecanico.trim());
         MecanicaTO mecanico = mecanicaDAO.findByNm_mecanico(nomeMecanico.trim());
         if (mecanico == null) {
             throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");

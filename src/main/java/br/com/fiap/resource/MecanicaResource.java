@@ -17,7 +17,7 @@ public class MecanicaResource {
     public Response findAll() {
         ArrayList<MecanicaTO> resultado = mecanicaBO.findAll();
         Response.ResponseBuilder response = null;
-        if (resultado !=null) {
+        if (resultado != null) {
             response = Response.ok();
         } else {
             response = Response.status(404);
@@ -26,10 +26,11 @@ public class MecanicaResource {
         response.entity(resultado);
         return response.build();
     }
+
     @GET
     @Path("/{nm_mecanico}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByNm_mecanico(@PathParam("nm_mecanico") String nm_mecanico){
+    public Response findByNm_mecanico(@PathParam("nm_mecanico") String nm_mecanico) {
         try {
             MecanicaTO resultado = mecanicaBO.findByNm_mecanico(nm_mecanico);
             return Response.ok(resultado).build();
@@ -43,12 +44,13 @@ public class MecanicaResource {
                     .build();
         }
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response save(MecanicaTO mecanica) {
         MecanicaTO resultado = mecanicaBO.save(mecanica);
         Response.ResponseBuilder response = null;
-        if (resultado != null){
+        if (resultado != null) {
             response = Response.created(null);
         } else {
             response = Response.status(400);
@@ -56,5 +58,27 @@ public class MecanicaResource {
         response.entity(resultado);
         return response.build();
     }
-}
 
+    @DELETE
+    @Path("/{nm_mecanico}")
+    public Response deleteMecanica(@PathParam("nm_mecanico") String nm_mecanico) {
+        try {
+            boolean deleted = mecanicaBO.delete(nm_mecanico.trim());
+            if (deleted) {
+                return Response.noContent().build(); // Retorna 204 No Content
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Mecânico não encontrado.")
+                        .build(); // Retorna 404 Not Found
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build(); // Retorna 400 Bad Request
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build(); // Retorna 500 Internal Server Error
+        }
+    }
+}
