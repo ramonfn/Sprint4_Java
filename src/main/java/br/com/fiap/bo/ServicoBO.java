@@ -68,9 +68,12 @@ public class ServicoBO {
         if (id_servico == null || id_servico.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do serviço não pode ser vazio.");
         }
-        if (servicoDAO.findById_servico(id_servico.trim()) == null) {
-            throw new IllegalArgumentException("Serviço com ID " + id_servico + " não encontrado.");
+        System.out.println("Tentando excluir o serviço: " + id_servico.trim());
+        ServicoTO servico = servicoDAO.findById_servico(id_servico.trim());
+        if (servico == null) {
+            throw new IllegalArgumentException("Serviço não encontrado com o ID informado.");
         }
+
         return servicoDAO.delete(id_servico.trim());
     }
 

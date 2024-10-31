@@ -36,9 +36,8 @@ public class ServicoDAO extends Repository {
     public ServicoTO findById_servico(String id_servico) {
         ServicoTO servico = null;
         String sql = "SELECT * FROM SERVICO WHERE ID_SERVICO LIKE ?";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql))
-        {
-            ps.setString(1, id_servico.trim() + "%");
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, id_servico.trim() + "%"); // Utilizando trim aqui também
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 servico = new ServicoTO();
@@ -47,9 +46,9 @@ public class ServicoDAO extends Repository {
                 servico.setPr_servico(rs.getInt(3));
                 servico.setDt_servico(rs.getDate(4).toLocalDate());
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Erro na consulta: " + e.getMessage());
-        }finally {
+        } finally {
             closeConnection();
         }
         return servico;
@@ -72,9 +71,9 @@ public class ServicoDAO extends Repository {
         return null;
     }
     public boolean delete(String id_servico) {
-        String sql = "DELETE FROM SERVICO WHERE ID_SERVICO = ?";
+        String sql = "DELETE FROM SERVICO WHERE TRIM(ID_SERVICO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, id_servico);
+            ps.setString(1, id_servico.trim());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Erro ao excluir: " + e.getMessage());
@@ -83,17 +82,4 @@ public class ServicoDAO extends Repository {
         }
         return false;
     }
-    public int deleteByMecanico(String nm_cliente) {
-        String sql = "DELETE FROM SERVICO WHERE NM_MECANICO IN (SELECT NM_MECANICO FROM MECANICA WHERE NM_CLIENTE = ?)";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, nm_cliente);
-            return ps.executeUpdate(); // Retorna o número de registros excluídos
-        } catch (SQLException e) {
-            System.out.println("Erro ao excluir serviço do mecânico: " + e.getMessage());
-        } finally {
-            closeConnection();
-        }
-        return 0;
-    }
-
 }

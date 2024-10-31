@@ -1,7 +1,6 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.ServicoBO;
-import br.com.fiap.to.MecanicaTO;
 import br.com.fiap.to.ServicoTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -57,5 +56,27 @@ public class ServicoResource {
         }
         response.entity(resultado);
         return response.build();
+    }
+    @DELETE
+    @Path("/{id_servico}")
+    public Response deleteServico(@PathParam("id_servico") String id_servico) {
+        try {
+            boolean deleted = servicoBO.delete(id_servico.trim());
+            if (deleted) {
+                return Response.noContent().build(); // Retorna 204 No Content
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Serviço não encontrado.")
+                        .build(); // Retorna 404 Not Found
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build(); // Retorna 400 Bad Request
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build(); // Retorna 500 Internal Server Error
+        }
     }
 }

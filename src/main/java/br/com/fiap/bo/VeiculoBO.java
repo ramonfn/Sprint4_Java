@@ -58,13 +58,14 @@ public class VeiculoBO {
         }
         return savedVeiculo;
     }
-    public boolean delete(String id_veiculo) {
+    public void delete(String id_veiculo) throws IllegalArgumentException{
+        veiculoDAO = new VeiculoDAO();
         if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do veículo não pode ser vazio.");
         }
-        if (veiculoDAO.findById_veiculo(id_veiculo.trim()) == null) {
+        if (veiculoDAO.deleteById(id_veiculo) == 0) {
             throw new IllegalArgumentException("Veículo não encontrado com o ID informado.");
         }
-        return veiculoDAO.delete(id_veiculo.trim());
     }
+
 }

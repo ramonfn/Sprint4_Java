@@ -53,6 +53,22 @@ public class VeiculoResource {
         response.entity(resultado);
         return response.build();
     }
+    @DELETE
+    @Path("/{id_veiculo}")
+    public Response delete(@PathParam("id_veiculo") String id_veiculo) {
+        try {
+            veiculoBO.delete(id_veiculo);
+            return Response.noContent().build(); // Retorna 204 No Content em caso de sucesso
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build();
+        }
+    }
 
 }
 
