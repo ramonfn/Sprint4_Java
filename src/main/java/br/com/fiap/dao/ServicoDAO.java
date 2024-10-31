@@ -71,4 +71,29 @@ public class ServicoDAO extends Repository {
         }
         return null;
     }
+    public boolean delete(String id_servico) {
+        String sql = "DELETE FROM SERVICO WHERE ID_SERVICO = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, id_servico);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }
+    public int deleteByMecanico(String nm_cliente) {
+        String sql = "DELETE FROM SERVICO WHERE NM_MECANICO IN (SELECT NM_MECANICO FROM MECANICA WHERE NM_CLIENTE = ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, nm_cliente);
+            return ps.executeUpdate(); // Retorna o número de registros excluídos
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir serviço do mecânico: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return 0;
+    }
+
 }

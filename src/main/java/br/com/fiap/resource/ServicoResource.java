@@ -1,8 +1,8 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.ServicoBO;
+import br.com.fiap.to.MecanicaTO;
 import br.com.fiap.to.ServicoTO;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -47,7 +47,7 @@ public class ServicoResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(@Valid ServicoTO servico) {
+    public Response save(ServicoTO servico) {
         ServicoTO resultado = servicoBO.save(servico);
         Response.ResponseBuilder response = null;
         if (resultado != null){

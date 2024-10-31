@@ -1,31 +1,28 @@
 package br.com.fiap.to;
 
 import java.time.LocalDate;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Pattern;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 
 public class ConsultaTO {
+    private String motivo;
+    @JsonbDateFormat("yyyy/MM/dd")
+    private LocalDate data;
+    private String hora;
+    private String local;
 
-    @NotBlank private String motivo;
+    // Construtor vazio
+    public ConsultaTO() {
+    }
 
-    @NotNull @PastOrPresent @JsonbDateFormat("yyyy/MM/dd") private LocalDate data;
-
-    @NotBlank private String hora;
-
-    @NotBlank private String local;
-
-    public ConsultaTO() {}
-
-    public ConsultaTO(@NotBlank String motivo, @NotNull @PastOrPresent LocalDate data, @NotBlank  String hora, @NotBlank String local) {
+    // Construtor com parâmetros
+    public ConsultaTO(String motivo, LocalDate data, String hora, String local) {
         this.motivo = motivo;
         this.data = data;
         this.hora = hora;
         this.local = local;
     }
 
+    // Métodos getters e setters
     public String getMotivo() {
         return motivo;
     }

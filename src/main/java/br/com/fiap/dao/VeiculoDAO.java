@@ -74,4 +74,28 @@ public class VeiculoDAO extends Repository {
         }
         return null;
     }
+    public boolean delete(String id_veiculo) {
+        String sql = "DELETE FROM VEICULO WHERE ID_VEICULO = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, id_veiculo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }public int deleteByCliente(String nm_cliente) {
+        String sql = "DELETE FROM VEICULO WHERE NM_MECANICO IN (SELECT NM_MECANICO FROM MECANICA WHERE NM_CLIENTE = ?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, nm_cliente);
+            return ps.executeUpdate(); // Retorna o número de registros excluídos
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir veículo do cliente: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return 0;
+    }
+
 }

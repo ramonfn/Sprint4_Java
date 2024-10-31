@@ -64,5 +64,15 @@ public class ServicoBO {
         }
         return savedServico;
     }
+    public boolean delete(String id_servico) {
+        if (id_servico == null || id_servico.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID do serviço não pode ser vazio.");
+        }
+        if (servicoDAO.findById_servico(id_servico.trim()) == null) {
+            throw new IllegalArgumentException("Serviço com ID " + id_servico + " não encontrado.");
+        }
+        return servicoDAO.delete(id_servico.trim());
+    }
+
 }
 

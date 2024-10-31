@@ -7,7 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 public class MecanicaDAO extends Repository {
+
     public ArrayList<MecanicaTO> findAll() {
         ArrayList<MecanicaTO> mecanicas = new ArrayList<MecanicaTO>();
         String sql = "SELECT * FROM MECANICA ORDER BY NM_MECANICO";
@@ -22,8 +24,6 @@ public class MecanicaDAO extends Repository {
                     mecanica.setNr_cep(rs.getInt(4));
                     mecanicas.add(mecanica);
                 }
-            } else {
-                return null;
             }
         } catch (SQLException e) {
             System.out.println("Erro na consulta: " + e.getMessage());
@@ -70,5 +70,31 @@ public class MecanicaDAO extends Repository {
             closeConnection();
         }
         return null;
+    }
+
+    public boolean delete(String nm_mecanico) {
+        String sql = "DELETE FROM MECANICA WHERE NM_MECANICO = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, nm_mecanico);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }
+
+    public int deleteByCliente(String nm_cliente) {
+        String sql = "DELETE FROM MECANICA WHERE NM_CLIENTE = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, nm_cliente);
+            return ps.executeUpdate(); // Retorna o número de registros excluídos
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir mecânica do cliente: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return 0;
     }
 }

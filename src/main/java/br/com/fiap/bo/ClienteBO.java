@@ -1,10 +1,7 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ClienteDAO;
-import br.com.fiap.dao.ConsultaDAO;
 import br.com.fiap.to.ClienteTO;
-import br.com.fiap.to.ConsultaTO;
-
 import java.util.ArrayList;
 
 public class ClienteBO {
@@ -16,10 +13,16 @@ public class ClienteBO {
     }
 
     public void addCliente(ClienteTO cliente) throws IllegalArgumentException {
-        validateCliente(cliente);
+        validateCliente(cliente); // Validação do cliente
         clienteDAO = new ClienteDAO();
+        // Verifica se o cliente já existe
         if (clienteDAO.findByNr_cpf(cliente.getNr_cpf()) != null) {
             throw new IllegalArgumentException("Cliente já existe com o CPF informado.");
+        }
+        // Salva o cliente no banco de dados
+        ClienteTO savedCliente = clienteDAO.save(cliente);
+        if (savedCliente == null) {
+            throw new IllegalArgumentException("Erro ao salvar o cliente. Tente novamente.");
         }
     }
 
@@ -37,7 +40,8 @@ public class ClienteBO {
             throw new IllegalArgumentException("Data de nascimento não pode ser nula.");
         }
     }
-    public ClienteTO findbyNr_cpf(String nr_cpf) {
+
+    public ClienteTO findByNr_cpf(String nr_cpf) {
         clienteDAO = new ClienteDAO();
         if (nr_cpf == null || nr_cpf.trim().isEmpty()) {
             throw new IllegalArgumentException("Número de CPF não pode ser vazio.");
@@ -46,19 +50,21 @@ public class ClienteBO {
         if (cliente == null) {
             throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
         }
-        return  clienteDAO.findByNr_cpf(nr_cpf);
+        return cliente;
     }
-    public ClienteTO save(ClienteTO cliente){
+
+    public boolean delete(String nr_cpf) {
         clienteDAO = new ClienteDAO();
-        validateCliente(cliente);
-        if (clienteDAO.findByNr_cpf(cliente.getNr_cpf()) != null) {
-            throw new IllegalArgumentException("Já existe um cliente cadastrado com este CPF.");
+        if (nr_cpf == null || nr_cpf.trim().isEmpty()) {
+            throw new IllegalArgumentException("Número de CPF não pode ser vazio.");
         }
-        ClienteTO savedCliente = clienteDAO.save(cliente);
-        if (savedCliente == null) {
-            throw new IllegalArgumentException("Erro ao salvar o cliente. Tente novamente.");
+        // Verificando se o cliente existe
+        ClienteTO cliente = clienteDAO.findByNr_cpf(nr_cpf);
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
         }
-        return savedCliente;
+        // Excluindo o cliente
+        boolean deleted = clienteDAO.delete(nr_cpf);
+        return deleted;
     }
 }
-

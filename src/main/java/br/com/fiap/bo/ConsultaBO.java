@@ -18,10 +18,17 @@ public class ConsultaBO {
     public void addConsulta(ConsultaTO consulta) throws IllegalArgumentException {
         validateConsulta(consulta);
         consultaDAO = new ConsultaDAO();
-        if (consultaDAO.findByDataHora(consulta.getData(), consulta.getHora()) != null) {
+
+        // A hora deve estar no formato HHmmss ao ser recebida
+        String normalizedHour = normalizeHour(consulta.getHora());
+
+        // Verifica se já existe uma consulta agendada para a mesma data e hora
+        if (consultaDAO.findByDataHora(consulta.getData(), normalizedHour) != null) {
             throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
         }
-        consultaDAO.save(consulta);  // Salva a consulta no banco de dados
+
+        // Salva a consulta no banco de dados
+        consultaDAO.save(consulta);
     }
 
     private void validateConsulta(ConsultaTO consulta) throws IllegalArgumentException {
@@ -40,7 +47,11 @@ public class ConsultaBO {
         if (consulta.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Data da consulta não pode ser no passado.");
         }
-        // O formato da hora será validado na normalização
+
+        // Verifica se a hora está no formato correto (HHmmss)
+        if (!consulta.getHora().matches("\\d{6}")) {
+            throw new IllegalArgumentException("Formato de hora inválido. Deve estar no formato HHmmss.");
+        }
     }
 
     public ConsultaTO findByDataHora(LocalDate data, String hora) throws IllegalArgumentException {
@@ -50,39 +61,37 @@ public class ConsultaBO {
             throw new IllegalArgumentException("Data não pode ser nula.");
         }
 
-        String normalizedHour = normalizeHour(hora); // Normaliza a hora
+        // Verifica se a hora está no formato correto (HHmmss)
+        if (!hora.matches("\\d{6}")) {
+            throw new IllegalArgumentException("Formato de hora inválido. Deve estar no formato HHmmss.");
+        }
 
         // Chamando o DAO para encontrar a consulta
-        ConsultaTO consulta = consultaDAO.findByDataHora(data, normalizedHour);
+        ConsultaTO consulta = consultaDAO.findByDataHora(data, hora); // Mantendo hora como String
         if (consulta == null) {
             throw new IllegalArgumentException("Consulta não encontrada para a data e hora informadas.");
         }
         return consulta;
     }
 
-    private String normalizeHour(String hora) {
-        if (hora == null || hora.trim().isEmpty()) {
-            throw new IllegalArgumentException("Hora não pode ser nula ou vazia.");
-        }
-        hora = hora.replaceAll("\\s+", "");
-
-        if (hora.matches("\\d{2}:\\d{2}")) {
-            return hora.replace(":", "") + "00"; // Remove ":" e adiciona segundos
-        }
-
-        return hora; // Retorna a hora se já estiver no formato correto
-    }
-
     public ConsultaTO save(ConsultaTO consulta) {
         consultaDAO = new ConsultaDAO();
+
+        // Valida a consulta antes de salvar
         validateConsulta(consulta);
 
-        String normalizedHour = normalizeHour(consulta.getHora()); // Normaliza a hora antes de verificar
+        // Normaliza a hora para o formato HHmmss
+        String normalizedHour = normalizeHour(consulta.getHora());
 
+        // Log para verificar os valores
+        System.out.println("Tentando salvar consulta com data: " + consulta.getData() + " e hora: " + normalizedHour);
+
+        // Verifica se já existe uma consulta agendada para a mesma data e hora
         if (consultaDAO.findByDataHora(consulta.getData(), normalizedHour) != null) {
             throw new IllegalArgumentException("Já existe uma consulta agendada para a mesma data e hora.");
         }
 
+        // Salva a consulta no banco de dados
         ConsultaTO savedConsulta = consultaDAO.save(consulta);
         if (savedConsulta == null) {
             throw new IllegalArgumentException("Erro ao salvar a consulta. Tente novamente.");
@@ -90,8 +99,33 @@ public class ConsultaBO {
         return savedConsulta;
     }
 
+    public boolean delete(LocalDate data, String hora) {
+        consultaDAO = new ConsultaDAO();
+
+        if (data == null) {
+            throw new IllegalArgumentException("Data não pode ser nula.");
+        }
+
+        // Verifica se a hora está no formato correto (HHmmss)
+        if (!hora.matches("\\d{6}")) {
+            throw new IllegalArgumentException("Formato de hora inválido. Deve estar no formato HHmmss.");
+        }
+
+        ConsultaTO consulta = consultaDAO.findByDataHora(data, hora);
+        if (consulta == null) {
+            throw new IllegalArgumentException("Consulta não encontrada para a data e hora informadas.");
+        }
+        return consultaDAO.delete(data, hora);
+    }
+
     public static LocalDate convertStringToLocalDate(String data) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return LocalDate.parse(data, formatter);
+    }
+
+    // Método para normalizar a hora (mantido apenas para validação)
+    private String normalizeHour(String hora) {
+        // Se houver lógica de normalização, pode ser implementada aqui
+        return hora; // Retorna a hora recebida
     }
 }

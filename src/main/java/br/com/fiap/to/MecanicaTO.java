@@ -1,25 +1,17 @@
 package br.com.fiap.to;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Pattern;
-
 public class MecanicaTO {
-
-    @NotBlank private String nm_mecanico;
-
-    @NotNull @PositiveOrZero private int nr_logradouro;
-
-    @NotBlank private String nm_logradouro;
-
-    @NotNull @PositiveOrZero private int nr_cep;
+    private String nm_mecanico;
+    private int nr_logradouro;
+    private String nm_logradouro;
+    private int nr_cep;
 
     // Construtor vazio
-    public MecanicaTO() {}
+    public MecanicaTO() {
+    }
 
     // Construtor com parâmetros
-    public MecanicaTO(@NotBlank String nm_mecanico, @NotNull @PositiveOrZero int nr_logradouro, @NotBlank String nm_logradouro, @NotNull @PositiveOrZero int nr_cep) {
+    public MecanicaTO(String nm_mecanico, int nr_logradouro, String nm_logradouro, int nr_cep) {
         this.nm_mecanico = nm_mecanico;
         this.nr_logradouro = nr_logradouro;
         this.nm_logradouro = nm_logradouro;
@@ -58,4 +50,5 @@ public class MecanicaTO {
     public void setNr_cep(int nr_cep) {
         this.nr_cep = nr_cep;
     }
+
 }

@@ -5,8 +5,6 @@ import br.com.fiap.to.ClienteTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
 
 @Path("/Sprint4_java/cliente")
@@ -15,39 +13,55 @@ public class ClienteResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAll(){
+    public Response findAll() {
         ArrayList<ClienteTO> resultado = clienteBO.findAll();
-        if (resultado != null) {
+        if (resultado != null && !resultado.isEmpty()) {
             return Response.ok(resultado).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
     @GET
     @Path("/{nr_cpf}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByNr_cpf(@PathParam("nr_cpf")String nr_cpf) {
-        ClienteTO resultado = clienteBO.findbyNr_cpf(nr_cpf);
-        Response.ResponseBuilder response = null;
+    public Response findByNr_cpf(@PathParam("nr_cpf") String nr_cpf) {
+        ClienteTO resultado = clienteBO.findByNr_cpf(nr_cpf);
+        Response.ResponseBuilder response;
         if (resultado != null) {
-            response = Response.ok();
+            response = Response.ok(resultado);
         } else {
-            response = Response.status(404);
+            response = Response.status(Response.Status.NOT_FOUND);
         }
-        response.entity(resultado);
         return response.build();
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(@Valid ClienteTO cliente) {
-        ClienteTO resultado = clienteBO.save(cliente);
-        Response.ResponseBuilder response = null;
-        if (resultado != null){
-            response = Response.created(null);
-        } else {
-            response = Response.status(400);
+    public Response save(ClienteTO cliente) {
+        Response.ResponseBuilder response;
+        try {
+            clienteBO.addCliente(cliente); // Alterado para chamar o método addCliente
+            response = Response.created(null).entity(cliente); // Retorna a entidade do cliente criado
+        } catch (IllegalArgumentException e) {
+            response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()); // 400 Bad Request
         }
-        response.entity(resultado);
+        return response.build();
+    }
+
+    @DELETE
+    @Path("/{nr_cpf}")
+    public Response delete(@PathParam("nr_cpf") String nr_cpf) {
+        Response.ResponseBuilder response;
+        try {
+            if (clienteBO.delete(nr_cpf)) {
+                response = Response.status(Response.Status.NO_CONTENT); // 204 No Content
+            } else {
+                response = Response.status(Response.Status.NOT_FOUND); // 404 Not Found
+            }
+        } catch (IllegalArgumentException e) {
+            response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()); // 400 Bad Request
+        }
         return response.build();
     }
 }

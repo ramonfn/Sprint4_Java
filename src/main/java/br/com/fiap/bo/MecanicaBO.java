@@ -87,4 +87,17 @@ public class MecanicaBO {
         }
         return savedMecanico;
     }
+
+    public boolean delete(String nomeMecanico) {
+        if (nomeMecanico == null || nomeMecanico.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome do mecânico não pode ser vazio.");
+        }
+
+        MecanicaTO mecanico = mecanicaDAO.findByNm_mecanico(nomeMecanico.trim());
+        if (mecanico == null) {
+            throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");
+        }
+
+        return mecanicaDAO.delete(nomeMecanico.trim());
+    }
 }

@@ -2,13 +2,13 @@ package br.com.fiap.resource;
 
 import br.com.fiap.bo.ConsultaBO;
 import br.com.fiap.to.ConsultaTO;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
 
 @Path("/Sprint4_java/consulta")
 public class ConsultaResource {
@@ -50,7 +50,7 @@ public class ConsultaResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(@Valid ConsultaTO consulta) {
+    public Response save(ConsultaTO consulta) {
         System.out.println("Consulta recebida: " + consulta); // Log para depuração
 
         if (consulta == null) {
@@ -59,7 +59,7 @@ public class ConsultaResource {
 
         // Verifique se a hora está no formato correto
         if (!isValidTimeFormat(consulta.getHora())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Formato de hora inválido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Formato de hora inválido. Deve estar no formato HHmmss.").build();
         }
 
         try {
@@ -74,20 +74,35 @@ public class ConsultaResource {
                     .build();
         }
     }
+    @DELETE
+    @Path("/{ano}/{mes}/{dia}/{hora}")
+    public Response delete(@PathParam("ano") int ano, @PathParam("mes") int mes, @PathParam("dia") int dia, @PathParam("hora") String horaStr) {
+        Response.ResponseBuilder response;
+        try {
+            LocalDate data = LocalDate.of(ano, mes, dia);
+            if (!isValidTimeFormat(horaStr)) {
+                response = Response.status(Response.Status.BAD_REQUEST).entity("Formato de hora inválido.");
+            } else if (consultaBO.delete(data, horaStr)) {
+                response = Response.status(Response.Status.NO_CONTENT); // 204 No Content
+            } else {
+                response = Response.status(Response.Status.NOT_FOUND).entity("Consulta não encontrada.");
+            }
+        } catch (IllegalArgumentException e) {
+            response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());
+        } catch (Exception e) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro inesperado: " + e.getMessage());
+        }
+        return response.build();
+    }
+
+
+
 
     private boolean isValidTimeFormat(String time) {
         if (time == null || time.isEmpty()) return false;
 
-        String[] parts = time.split(":");
-        if (parts.length != 2) return false; // Corrigido para 2 partes (HH:mm)
-
-        try {
-            int horas = Integer.parseInt(parts[0]);
-            int minutos = Integer.parseInt(parts[1]);
-
-            return (horas >= 0 && horas < 24) && (minutos >= 0 && minutos < 60);
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        // Verifica se a hora está no formato HHmmss (6 dígitos)
+        return time.matches("\\d{6}");
     }
-}
+    }
+

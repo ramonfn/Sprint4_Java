@@ -19,7 +19,7 @@ public class ConsultaDAO extends Repository {
                 ConsultaTO consulta = new ConsultaTO();
                 consulta.setMotivo(rs.getString(1));
                 consulta.setData(rs.getDate(2).toLocalDate());
-                consulta.setHora(rs.getString(3)); // Mantenha como String
+                consulta.setHora(rs.getString(3)); // Mantém como String
                 consulta.setLocal(rs.getString(4));
                 consultas.add(consulta);
             }
@@ -31,13 +31,13 @@ public class ConsultaDAO extends Repository {
         return consultas;
     }
 
-    public ConsultaTO findByDataHora(LocalDate data, String hora) {
+    public ConsultaTO findByDataHora(LocalDate data, String hora) { // Mudança para String
         ConsultaTO consulta = null; // Inicialize como null
         String sql = "SELECT * FROM CONSULTA WHERE DATA = ? AND HORA = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             // Define os parâmetros da consulta
             ps.setDate(1, Date.valueOf(data));
-            ps.setString(2, hora); // Passe a hora como String
+            ps.setString(2, hora); // Passa a hora como String
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -58,19 +58,12 @@ public class ConsultaDAO extends Repository {
         return consulta;
     }
 
-
     public ConsultaTO save(ConsultaTO consulta) {
         String sql = "INSERT INTO CONSULTA (MOTIVO, DATA, HORA, LOCAL) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, consulta.getMotivo());
             ps.setDate(2, Date.valueOf(consulta.getData()));
-
-            // Converter a hora de String para um formato numérico
-            int horas = Integer.parseInt(consulta.getHora().substring(0, 2)); // Extrair as horas
-            int minutos = Integer.parseInt(consulta.getHora().substring(3, 5)); // Extrair os minutos
-            int horaNumerica = horas * 100 + minutos; // Converter para formato HHmm
-
-            ps.setInt(3, horaNumerica); // Passar a hora como inteiro
+            ps.setString(3, consulta.getHora()); // Passa a hora como String
             ps.setString(4, consulta.getLocal());
 
             if (ps.executeUpdate() > 0) {
@@ -82,5 +75,32 @@ public class ConsultaDAO extends Repository {
             closeConnection();
         }
         return null;
+    }
+
+    public boolean delete(LocalDate data, String hora) {
+        String sql = "DELETE FROM CONSULTA WHERE DATA = ? AND HORA = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(data));
+            ps.setString(2, hora); // Mantém como String
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }
+
+    public int deleteByCliente(String nm_cliente) {
+        String sql = "DELETE FROM CONSULTA WHERE NR_CPF_CLIENTE = ?"; // Ajuste o nome da coluna conforme necessário
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, nm_cliente);
+            ps.executeUpdate(); // Executa a exclusão das consultas associadas
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir consultas do cliente: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return 0;
     }
 }
