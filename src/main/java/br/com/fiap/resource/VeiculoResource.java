@@ -69,6 +69,30 @@ public class VeiculoResource {
                     .build();
         }
     }
+    @PUT
+    @Path("/{id_veiculo}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("id_veiculo") String id_veiculo, VeiculoTO veiculo) {
+        if (!id_veiculo.trim().equals(veiculo.getId_veiculo().trim())) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("ID do veículo na URL não coincide com o ID no corpo da requisição.")
+                    .build();
+        }
+        try {
+            VeiculoTO resultado = veiculoBO.update(veiculo);
+            return Response.ok(resultado).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build();
+        }
+    }
+
+
 
 }
 

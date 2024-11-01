@@ -79,4 +79,29 @@ public class ServicoResource {
                     .build(); // Retorna 500 Internal Server Error
         }
     }
+    @PUT
+    @Path("/{id_servico}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateServico(@PathParam("id_servico") String id_servico, ServicoTO servico) {
+        try {
+            servico.setId_servico(id_servico.trim());
+            boolean updated = servicoBO.update(servico);
+            if (updated) {
+                return Response.ok().build(); // Retorna 200 OK
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Serviço não encontrado.")
+                        .build(); // Retorna 404 Not Found
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build(); // Retorna 400 Bad Request
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro inesperado: " + e.getMessage())
+                    .build(); // Retorna 500 Internal Server Error
+        }
+    }
+
 }

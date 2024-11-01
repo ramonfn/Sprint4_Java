@@ -10,8 +10,7 @@ public class VeiculoDAO extends Repository {
     public ArrayList<VeiculoTO> findAll() {
         ArrayList<VeiculoTO> veiculos = new ArrayList<VeiculoTO>();
         String sql = "SELECT * FROM VEICULO ORDER BY ID_VEICULO";
-        try (PreparedStatement ps = getConnection().prepareStatement(sql))
-        {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs != null) {
                 while (rs.next()) {
@@ -32,6 +31,7 @@ public class VeiculoDAO extends Repository {
         }
         return veiculos;
     }
+
     public VeiculoTO findById_veiculo(String id_veiculo) {
         if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do veículo não pode ser nulo ou vazio.");
@@ -87,6 +87,7 @@ public class VeiculoDAO extends Repository {
         }
         return 0;
     }
+
     public int delete(String id_veiculo) {
         String sql = "DELETE FROM VEICULO WHERE TRIM(ID_VEICULO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
@@ -99,6 +100,7 @@ public class VeiculoDAO extends Repository {
         }
         return 0;
     }
+
     public int deleteById(String id_veiculo) {
         String sql = "DELETE FROM VEICULO WHERE TRIM(ID_VEICULO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
@@ -112,4 +114,19 @@ public class VeiculoDAO extends Repository {
         return 0; // Retorna 0 se não conseguir excluir
     }
 
+    public int update(VeiculoTO veiculo) {
+        String sql = "UPDATE VEICULO SET MARCA = ?, MODELO = ?, ANO_FABRICACAO = ? WHERE TRIM(ID_VEICULO) = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, veiculo.getMarca());
+            ps.setString(2, veiculo.getModelo());
+            ps.setString(3, veiculo.getAno_fabricacao());
+            ps.setString(4, veiculo.getId_veiculo().trim());
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar veículo: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return 0;
+    }
 }

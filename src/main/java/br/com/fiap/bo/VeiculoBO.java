@@ -8,14 +8,17 @@ import java.util.ArrayList;
 public class VeiculoBO {
     private VeiculoDAO veiculoDAO;
 
+    // Construtor
+    public VeiculoBO() {
+        this.veiculoDAO = new VeiculoDAO(); // Inicializa aqui
+    }
+
     public ArrayList<VeiculoTO> findAll() {
-        veiculoDAO = new VeiculoDAO();
         return veiculoDAO.findAll();
     }
 
     public void addVeiculo(VeiculoTO veiculo) throws IllegalArgumentException {
         validateVeiculo(veiculo);
-        veiculoDAO = new VeiculoDAO();
         if (veiculoDAO.findById_veiculo(veiculo.getId_veiculo()) != null) {
             throw new IllegalArgumentException("Já existe um veículo cadastrado com este ID.");
         }
@@ -35,8 +38,8 @@ public class VeiculoBO {
             throw new IllegalArgumentException("Ano de fabricação inválido. Deve conter exatamente 4 dígitos.");
         }
     }
-    public VeiculoTO findById_veiculo(String id_veiculo){
-        veiculoDAO = new VeiculoDAO();
+
+    public VeiculoTO findById_veiculo(String id_veiculo) {
         if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do veículo não pode ser vazio.");
         }
@@ -46,8 +49,8 @@ public class VeiculoBO {
         }
         return veiculo;
     }
-    public VeiculoTO save(VeiculoTO veiculo){
-        veiculoDAO = new VeiculoDAO();
+
+    public VeiculoTO save(VeiculoTO veiculo) {
         validateVeiculo(veiculo);
         if (veiculoDAO.findById_veiculo(veiculo.getId_veiculo()) != null) {
             throw new IllegalArgumentException("Já existe um veículo cadastrado com este ID.");
@@ -58,8 +61,8 @@ public class VeiculoBO {
         }
         return savedVeiculo;
     }
-    public void delete(String id_veiculo) throws IllegalArgumentException{
-        veiculoDAO = new VeiculoDAO();
+
+    public void delete(String id_veiculo) throws IllegalArgumentException {
         if (id_veiculo == null || id_veiculo.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do veículo não pode ser vazio.");
         }
@@ -68,4 +71,11 @@ public class VeiculoBO {
         }
     }
 
+    public VeiculoTO update(VeiculoTO veiculo) {
+        validateVeiculo(veiculo);
+        if (veiculoDAO.update(veiculo) == 0) {
+            throw new IllegalArgumentException("Veículo não encontrado para atualizar.");
+        }
+        return veiculo;
+    }
 }

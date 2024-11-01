@@ -76,6 +76,13 @@ public class ServicoBO {
 
         return servicoDAO.delete(id_servico.trim());
     }
+    public boolean update(ServicoTO servico) {
+        validateServico(servico);
+        if (servicoDAO.findById_servico(servico.getId_servico()) == null) {
+            throw new IllegalArgumentException("Serviço não encontrado com o ID informado.");
+        }
+        return servicoDAO.update(servico);
+    }
 
 }
 

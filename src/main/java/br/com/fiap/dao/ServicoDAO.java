@@ -82,4 +82,21 @@ public class ServicoDAO extends Repository {
         }
         return false;
     }
+    public boolean update(ServicoTO servico) {
+        String sql = "UPDATE SERVICO SET DC_SERVICO = ?, PR_SERVICO = ?, DT_SERVICO = ? WHERE TRIM(ID_SERVICO) = TRIM(?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, servico.getDc_servico());
+            ps.setInt(2, servico.getPr_servico());
+            ps.setDate(3, java.sql.Date.valueOf(servico.getDt_servico()));
+            ps.setString(4, servico.getId_servico().trim());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar serviço: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }
+
+
 }
