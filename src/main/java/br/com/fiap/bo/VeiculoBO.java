@@ -8,9 +8,8 @@ import java.util.ArrayList;
 public class VeiculoBO {
     private VeiculoDAO veiculoDAO;
 
-    // Construtor
     public VeiculoBO() {
-        this.veiculoDAO = new VeiculoDAO(); // Inicializa aqui
+        this.veiculoDAO = new VeiculoDAO();
     }
 
     public ArrayList<VeiculoTO> findAll() {

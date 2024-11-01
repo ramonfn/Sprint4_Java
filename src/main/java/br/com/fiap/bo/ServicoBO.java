@@ -1,10 +1,7 @@
 package br.com.fiap.bo;
 
 import br.com.fiap.dao.ServicoDAO;
-import br.com.fiap.dao.VeiculoDAO;
 import br.com.fiap.to.ServicoTO;
-import br.com.fiap.to.VeiculoTO;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -23,7 +20,6 @@ public class ServicoBO {
             throw new IllegalArgumentException("Já existe um serviço cadastrado com este ID.");
         }
     }
-
     private void validateServico(ServicoTO servico) throws IllegalArgumentException {
         if (servico.getId_servico() == null || servico.getId_servico().trim().isEmpty()) {
             throw new IllegalArgumentException("ID do serviço não pode ser vazio.");

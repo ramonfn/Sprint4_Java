@@ -1,7 +1,6 @@
 package br.com.fiap.resource;
 
 import br.com.fiap.bo.VeiculoBO;
-import br.com.fiap.to.ServicoTO;
 import br.com.fiap.to.VeiculoTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

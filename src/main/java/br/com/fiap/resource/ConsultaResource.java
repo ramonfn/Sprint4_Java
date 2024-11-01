@@ -6,8 +6,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 @Path("/Sprint4_java/consulta")
 public class ConsultaResource {

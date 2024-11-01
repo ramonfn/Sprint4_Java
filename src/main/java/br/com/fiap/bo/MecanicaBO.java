@@ -8,9 +8,8 @@ import java.util.ArrayList;
 public class MecanicaBO {
     private MecanicaDAO mecanicaDAO;
 
-    // Construtor para inicializar o MecanicaDAO
     public MecanicaBO() {
-        this.mecanicaDAO = new MecanicaDAO(); // Inicializa o DAO
+        this.mecanicaDAO = new MecanicaDAO();
     }
 
     public ArrayList<MecanicaTO> findAll() {
@@ -19,12 +18,10 @@ public class MecanicaBO {
 
     public void addMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
         validateMecanico(mecanico);
-        // Usando trim() para garantir que não haja espaços em branco
         String nomeMecanico = mecanico.getNm_mecanico().trim();
         if (mecanicaDAO.findByNm_mecanico(nomeMecanico) != null) {
             throw new IllegalArgumentException("Mecânico já existe com o nome informado.");
         }
-        // Aqui você pode adicionar a lógica para salvar o mecânico se necessário
     }
 
     private void validateMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
@@ -108,6 +105,6 @@ public class MecanicaBO {
             throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");
         }
 
-        return mecanicaDAO.update(mecanico); // Chama o método update do DAO
+        return mecanicaDAO.update(mecanico);
     }
 }

@@ -2,10 +2,7 @@ package br.com.fiap.bo;
 
 import br.com.fiap.dao.ConsultaDAO;
 import br.com.fiap.to.ConsultaTO;
-
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class ConsultaBO {
@@ -76,12 +73,9 @@ public class ConsultaBO {
         consultaDAO = new ConsultaDAO();
         ConsultaTO existingConsulta = consultaDAO.findByMotivo(consulta.getMotivo());
 
-        // Verifica se a consulta existe
         if (existingConsulta == null) {
             throw new IllegalArgumentException("Consulta não encontrada com o motivo informado.");
         }
-
-        // Chama o método update do DAO
         return consultaDAO.update(consulta);
     }
 
@@ -107,8 +101,6 @@ public class ConsultaBO {
             throw new IllegalArgumentException("Local da consulta não pode ser vazio.");
         }
     }
-
-    // Método para validar o formato da hora
     private boolean isValidTimeFormat(String time) {
         return time != null && time.matches("\\d{6}"); // HHmmss
     }

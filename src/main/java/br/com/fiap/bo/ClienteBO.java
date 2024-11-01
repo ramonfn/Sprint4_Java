@@ -13,13 +13,11 @@ public class ClienteBO {
     }
 
     public void addCliente(ClienteTO cliente) throws IllegalArgumentException {
-        validateCliente(cliente); // Validação do cliente
+        validateCliente(cliente);
         clienteDAO = new ClienteDAO();
-        // Verifica se o cliente já existe
         if (clienteDAO.findByNr_cpf(cliente.getNr_cpf()) != null) {
             throw new IllegalArgumentException("Cliente já existe com o CPF informado.");
         }
-        // Salva o cliente no banco de dados
         ClienteTO savedCliente = clienteDAO.save(cliente);
         if (savedCliente == null) {
             throw new IllegalArgumentException("Erro ao salvar o cliente. Tente novamente.");

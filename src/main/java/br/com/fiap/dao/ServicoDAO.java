@@ -1,12 +1,11 @@
 package br.com.fiap.dao;
 
-import br.com.fiap.to.ClienteTO;
 import br.com.fiap.to.ServicoTO;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 public class ServicoDAO extends Repository {
     public ArrayList<ServicoTO> findAll() {
         ArrayList<ServicoTO> servicos = new ArrayList<ServicoTO>();

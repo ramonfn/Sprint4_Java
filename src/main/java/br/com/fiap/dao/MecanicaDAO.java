@@ -1,8 +1,7 @@
 package br.com.fiap.dao;
 
-import br.com.fiap.to.ClienteTO;
-import br.com.fiap.to.MecanicaTO;
 
+import br.com.fiap.to.MecanicaTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ public class MecanicaDAO extends Repository {
     }
 
     public MecanicaTO findByNm_mecanico(String nm_mecanico) {
-        MecanicaTO mecanica = null; // Inicializa como null
+        MecanicaTO mecanica = null;
         String sql = "SELECT * FROM MECANICA WHERE TRIM(NM_MECANICO) = TRIM(?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, nm_mecanico.trim()); // Utiliza o padrão LIKE

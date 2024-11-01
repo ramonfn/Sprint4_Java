@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ConsultaDAO extends Repository {
@@ -106,16 +105,16 @@ public class ConsultaDAO extends Repository {
 
 
     private boolean isValidDateFormat(String date) {
-        return date.matches("\\d{4}/\\d{2}/\\d{2}"); // yyyy/MM/dd
+        return date.matches("\\d{4}/\\d{2}/\\d{2}");
     }
     private boolean isValidTimeFormat(String time) {
-        return time.matches("\\d{6}"); // HHmmss
+        return time.matches("\\d{6}");
     }
     public int deleteByCliente(String nm_cliente) {
-        String sql = "DELETE FROM CONSULTA WHERE NR_CPF_CLIENTE = ?"; // Ajuste o nome da coluna conforme necessário
+        String sql = "DELETE FROM CONSULTA WHERE NR_CPF_CLIENTE = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, nm_cliente);
-            ps.executeUpdate(); // Executa a exclusão das consultas associadas
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erro ao excluir consultas do cliente: " + e.getMessage());
         } finally {
