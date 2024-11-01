@@ -92,16 +92,31 @@ public class ClienteDAO extends Repository {
         }
         return false;
     }
+    public boolean update(ClienteTO cliente) {
+        // Validação do cliente
+        if (cliente == null ||
+                cliente.getNr_cpf() == null ||
+                cliente.getNr_cpf().trim().isEmpty()) {
+            throw new IllegalArgumentException("CPF do cliente não pode ser vazio.");
+        }
 
-    public void deleteByCliente(String nr_cpf) {
-        String sql = "DELETE FROM CONSULTA WHERE NR_CPF_CLIENTE = ?";
+        String sql = "UPDATE CLIENTE SET NM_CLIENTE = ?, NR_RG = ?, DT_NASCIMENTO = ? WHERE NR_CPF = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, nr_cpf);
-            ps.executeUpdate(); // Executa a exclusão das consultas associadas
+            // Configura os parâmetros para a atualização
+            ps.setString(1, cliente.getNm_cliente());
+            ps.setString(2, cliente.getNr_rg());
+            ps.setDate(3, java.sql.Date.valueOf(cliente.getDt_nascimento()));
+            ps.setString(4, cliente.getNr_cpf());
+
+            // Executa a atualização e verifica se alguma linha foi afetada
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Erro ao excluir consultas do cliente: " + e.getMessage());
+            System.out.println("Erro ao atualizar cliente: " + e.getMessage());
         } finally {
             closeConnection();
         }
+        return false; // Retorna false se a atualização falhar
     }
+
+
 }

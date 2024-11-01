@@ -31,24 +31,21 @@ public class ConsultaDAO extends Repository {
         return consultas;
     }
 
-    public ConsultaTO findByDataHora(LocalDate data, String hora) { // Mudança para String
-        ConsultaTO consulta = null; // Inicialize como null
-        String sql = "SELECT * FROM CONSULTA WHERE DATA = ? AND HORA = ?";
+    public ConsultaTO findByMotivo(String motivo) {
+        ConsultaTO consulta = null;
+        String sql = "SELECT * FROM CONSULTA WHERE TRIM(MOTIVO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            // Define os parâmetros da consulta
-            ps.setDate(1, Date.valueOf(data));
-            ps.setString(2, hora); // Passa a hora como String
+            ps.setString(1, motivo);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 consulta = new ConsultaTO();
-                consulta.setMotivo(rs.getString(1)); // Supondo que o motivo é a primeira coluna
-                consulta.setData(rs.getDate(2).toLocalDate()); // A segunda coluna é a data
-                consulta.setHora(rs.getString(3)); // A terceira coluna é a hora
-                consulta.setLocal(rs.getString(4)); // A quarta coluna é o local
+                consulta.setMotivo(rs.getString(1));
+                consulta.setData(rs.getDate(2).toLocalDate());
+                consulta.setHora(rs.getString(3));
+                consulta.setLocal(rs.getString(4));
             } else {
-                // Caso não encontre a consulta
-                System.out.println("Nenhuma consulta encontrada para a data e hora informadas.");
+                System.out.println("Nenhuma consulta encontrada para o motivo informado: " + motivo);
             }
         } catch (SQLException e) {
             System.out.println("Erro na consulta: " + e.getMessage());
@@ -63,7 +60,7 @@ public class ConsultaDAO extends Repository {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, consulta.getMotivo());
             ps.setDate(2, Date.valueOf(consulta.getData()));
-            ps.setString(3, consulta.getHora()); // Passa a hora como String
+            ps.setInt(3, Integer.parseInt(consulta.getHora())); // Converte a String para int
             ps.setString(4, consulta.getLocal());
 
             if (ps.executeUpdate() > 0) {
@@ -77,11 +74,12 @@ public class ConsultaDAO extends Repository {
         return null;
     }
 
-    public boolean delete(LocalDate data, String hora) {
-        String sql = "DELETE FROM CONSULTA WHERE DATA = ? AND HORA = ?";
+
+
+    public boolean deleteByMotivo(String motivo) {
+        String sql = "DELETE FROM CONSULTA WHERE TRIM(MOTIVO) = ?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setDate(1, Date.valueOf(data));
-            ps.setString(2, hora); // Mantém como String
+            ps.setString(1, motivo);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Erro ao excluir: " + e.getMessage());
@@ -91,6 +89,28 @@ public class ConsultaDAO extends Repository {
         return false;
     }
 
+    public boolean update(ConsultaTO consulta) {
+        String sql = "UPDATE CONSULTA SET DATA = ?, HORA = ?, LOCAL = ? WHERE MOTIVO = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setDate(1, java.sql.Date.valueOf(consulta.getData()));
+            ps.setInt(2, Integer.parseInt(consulta.getHora())); // Converte a String para int
+            ps.setString(3, consulta.getLocal());
+            ps.setString(4, consulta.getMotivo());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar consulta: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    private boolean isValidDateFormat(String date) {
+        return date.matches("\\d{4}/\\d{2}/\\d{2}"); // yyyy/MM/dd
+    }
+    private boolean isValidTimeFormat(String time) {
+        return time.matches("\\d{6}"); // HHmmss
+    }
     public int deleteByCliente(String nm_cliente) {
         String sql = "DELETE FROM CONSULTA WHERE NR_CPF_CLIENTE = ?"; // Ajuste o nome da coluna conforme necessário
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {

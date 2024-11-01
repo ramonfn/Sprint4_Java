@@ -64,4 +64,27 @@ public class ClienteResource {
         }
         return response.build();
     }
+    @PUT
+    @Path("/{nr_cpf}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("nr_cpf") String nr_cpf, ClienteTO cliente) {
+        Response.ResponseBuilder response;
+        try {
+            // Garantimos que o CPF do cliente está correto antes de atualizar
+            cliente.setNr_cpf(nr_cpf);
+            boolean updated = clienteBO.updateCliente(cliente);
+
+            if (updated) {
+                response = Response.ok(cliente); // Retorna o cliente atualizado
+            } else {
+                response = Response.status(Response.Status.NOT_FOUND); // 404 Not Found, caso o cliente não exista
+            }
+        } catch (IllegalArgumentException e) {
+            response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()); // 400 Bad Request
+        }
+        return response.build();
+    }
+
+
 }

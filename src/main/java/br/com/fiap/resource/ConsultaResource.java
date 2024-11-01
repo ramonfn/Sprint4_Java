@@ -6,9 +6,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
 
 @Path("/Sprint4_java/consulta")
 public class ConsultaResource {
@@ -26,27 +25,19 @@ public class ConsultaResource {
     }
 
     @GET
-    @Path("/{ano}/{mes}/{dia}/{hora}")
+    @Path("/{motivo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByDataHora(@PathParam("ano") int ano, @PathParam("mes") int mes, @PathParam("dia") int dia, @PathParam("hora") String horaStr) {
+    public Response findByMotivo(@PathParam("motivo") String motivo) {
         try {
-            LocalDate data = LocalDate.of(ano, mes, dia); // Criando a data a partir dos parâmetros
-            if (!isValidTimeFormat(horaStr)) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Formato de hora inválido.").build();
-            }
-            ConsultaTO resultado = consultaBO.findByDataHora(data, horaStr);
-            if (resultado != null) {
-                return Response.ok(resultado).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).entity("Consulta não encontrada.").build();
-            }
-        } catch (DateTimeParseException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Formato de data inválido.").build();
+            System.out.println("Buscando consulta pelo motivo: " + motivo);
+            ConsultaTO resultado = consultaBO.findByMotivo(motivo);
+            return Response.ok(resultado).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro inesperado: " + e.getMessage()).build();
         }
     }
-
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,16 +65,14 @@ public class ConsultaResource {
                     .build();
         }
     }
+
     @DELETE
-    @Path("/{ano}/{mes}/{dia}/{hora}")
-    public Response delete(@PathParam("ano") int ano, @PathParam("mes") int mes, @PathParam("dia") int dia, @PathParam("hora") String horaStr) {
+    @Path("/{motivo}")
+    public Response deleteByMotivo(@PathParam("motivo") String motivo) {
         Response.ResponseBuilder response;
         try {
-            LocalDate data = LocalDate.of(ano, mes, dia);
-            if (!isValidTimeFormat(horaStr)) {
-                response = Response.status(Response.Status.BAD_REQUEST).entity("Formato de hora inválido.");
-            } else if (consultaBO.delete(data, horaStr)) {
-                response = Response.status(Response.Status.NO_CONTENT); // 204 No Content
+            if (consultaBO.deleteByMotivo(motivo)) {
+                response = Response.status(Response.Status.NO_CONTENT);
             } else {
                 response = Response.status(Response.Status.NOT_FOUND).entity("Consulta não encontrada.");
             }
@@ -94,9 +83,9 @@ public class ConsultaResource {
         }
         return response.build();
     }
-
-
-
+    private boolean isValidDateFormat(String date) {
+        return date.matches("\\d{4}/\\d{2}/\\d{2}"); // yyyy/MM/dd
+    }
 
     private boolean isValidTimeFormat(String time) {
         if (time == null || time.isEmpty()) return false;
@@ -104,5 +93,33 @@ public class ConsultaResource {
         // Verifica se a hora está no formato HHmmss (6 dígitos)
         return time.matches("\\d{6}");
     }
+
+    @PUT
+    @Path("/{motivo}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("motivo") String motivo, ConsultaTO consultaAtualizada) {
+        try {
+            // Verifica se o motivo está presente
+            if (motivo == null || motivo.trim().isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Motivo não pode ser nulo ou vazio.").build();
+            }
+
+            // Define o motivo na consulta atualizada
+            consultaAtualizada.setMotivo(motivo);
+
+            // Realiza a atualização
+            boolean atualizado = consultaBO.updateConsulta(consultaAtualizada);
+            if (atualizado) {
+                return Response.ok(consultaAtualizada).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Consulta não encontrada para atualização.").build();
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro inesperado: " + e.getMessage()).build();
+        }
     }
 
+}

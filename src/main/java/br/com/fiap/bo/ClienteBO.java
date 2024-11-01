@@ -58,13 +58,22 @@ public class ClienteBO {
         if (nr_cpf == null || nr_cpf.trim().isEmpty()) {
             throw new IllegalArgumentException("Número de CPF não pode ser vazio.");
         }
-        // Verificando se o cliente existe
         ClienteTO cliente = clienteDAO.findByNr_cpf(nr_cpf);
         if (cliente == null) {
             throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
         }
-        // Excluindo o cliente
+
         boolean deleted = clienteDAO.delete(nr_cpf);
         return deleted;
     }
+    public boolean updateCliente(ClienteTO cliente) throws IllegalArgumentException {
+        validateCliente(cliente);
+        clienteDAO = new ClienteDAO();
+        ClienteTO existingCliente = clienteDAO.findByNr_cpf(cliente.getNr_cpf());
+        if (existingCliente == null) {
+            throw new IllegalArgumentException("Cliente não encontrado com o CPF informado.");
+        }
+        return clienteDAO.update(cliente);
+    }
+
 }
