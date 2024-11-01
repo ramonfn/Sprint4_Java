@@ -35,9 +35,9 @@ public class MecanicaDAO extends Repository {
 
     public MecanicaTO findByNm_mecanico(String nm_mecanico) {
         MecanicaTO mecanica = null; // Inicializa como null
-        String sql = "SELECT * FROM MECANICA WHERE TRIM(NM_MECANICO) LIKE ?";
+        String sql = "SELECT * FROM MECANICA WHERE TRIM(NM_MECANICO) = TRIM(?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-            ps.setString(1, nm_mecanico.trim() + "%"); // Utiliza o padrão LIKE
+            ps.setString(1, nm_mecanico.trim()); // Utiliza o padrão LIKE
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 mecanica = new MecanicaTO();
@@ -97,4 +97,22 @@ public class MecanicaDAO extends Repository {
         }
         return 0;
     }
+    public boolean update(MecanicaTO mecanica) {
+        String sql = "UPDATE MECANICA SET NR_LOGRADOURO = ?, NM_LOGRADOURO = ?, NR_CEP = ? WHERE TRIM(NM_MECANICO) = TRIM(?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setInt(1, mecanica.getNr_logradouro());
+            ps.setString(2, mecanica.getNm_logradouro());
+            ps.setInt(3, mecanica.getNr_cep());
+            ps.setString(4, mecanica.getNm_mecanico().trim()); // Usa trim() para evitar espaços em branco
+
+            return ps.executeUpdate() > 0; // Retorna true se a atualização for bem-sucedida
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar mecânica: " + e.getMessage());
+        } finally {
+            closeConnection();
+        }
+        return false; // Retorna false se a atualização falhar
+    }
+
+
 }

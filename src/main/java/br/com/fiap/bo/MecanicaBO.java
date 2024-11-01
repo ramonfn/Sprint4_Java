@@ -100,4 +100,14 @@ public class MecanicaBO {
 
         return mecanicaDAO.delete(nomeMecanico.trim());
     }
+    public boolean updateMecanico(MecanicaTO mecanico) throws IllegalArgumentException {
+        validateMecanico(mecanico); // Valida os dados do mecânico
+        MecanicaTO existingMecanico = mecanicaDAO.findByNm_mecanico(mecanico.getNm_mecanico());
+
+        if (existingMecanico == null) {
+            throw new IllegalArgumentException("Mecânico não encontrado com o nome informado.");
+        }
+
+        return mecanicaDAO.update(mecanico); // Chama o método update do DAO
+    }
 }
