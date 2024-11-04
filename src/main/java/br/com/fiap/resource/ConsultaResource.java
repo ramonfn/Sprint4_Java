@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/Sprint4_java/consulta")
+@Path("/consulta")
 public class ConsultaResource {
     private ConsultaBO consultaBO = new ConsultaBO();
 

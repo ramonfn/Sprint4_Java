@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/Sprint4_java/servico")
+@Path("/servico")
 public class ServicoResource {
     private ServicoBO servicoBO = new ServicoBO();
 

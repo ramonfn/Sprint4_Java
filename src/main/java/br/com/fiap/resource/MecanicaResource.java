@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/Sprint4_java/mecanica")
+@Path("/mecanica")
 public class MecanicaResource {
     private MecanicaBO mecanicaBO = new MecanicaBO();
 

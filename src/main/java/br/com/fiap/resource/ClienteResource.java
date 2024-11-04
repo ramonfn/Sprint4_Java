@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/Sprint4_java/cliente")
+@Path("/cliente")
 public class ClienteResource {
     private ClienteBO clienteBO = new ClienteBO();
 
